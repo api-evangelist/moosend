@@ -1,0 +1,59 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "schema": "https://schema.org/",
+    "moosend": "https://moosend.com/",
+    "api": "https://api.moosend.com/v3/",
+    "EmailList": "schema:ItemList",
+    "Campaign": "schema:Event",
+    "Subscriber": "schema:Person",
+    "Segment": "schema:Audience",
+    "Automation": "schema:Action",
+    "TransactionalEmail": "schema:Message",
+    "MailingList": "schema:ItemList",
+    "CampaignReport": "schema:Report",
+    "ApiKey": "schema:accessCode",
+    "sender": "schema:sender",
+    "recipient": "schema:recipient",
+    "subject": "schema:name",
+    "openRate": "schema:Property",
+    "clickRate": "schema:Property",
+    "unsubscribeRate": "schema:Property",
+    "bounceRate": "schema:Property",
+    "scheduledAt": "schema:scheduledTime",
+    "sentAt": "schema:datePublished",
+    "createdAt": "schema:dateCreated",
+    "updatedAt": "schema:dateModified"
+  },
+  "@type": "schema:WebAPI",
+  "schema:name": "Moosend API",
+  "schema:description": "REST API for Moosend email marketing and automation platform providing access to mailing lists, campaigns, subscribers, automations, segmentation, transactional emails, and reporting.",
+  "schema:url": "https://api.moosend.com/v3/",
+  "schema:documentation": "https://docs.moosend.com/developers/api-documentation/en/index-en.html",
+  "schema:provider": {
+    "@type": "schema:Organization",
+    "schema:name": "Moosend",
+    "schema:url": "https://moosend.com/",
+    "schema:sameAs": [
+      "https://github.com/moosend",
+      "https://www.linkedin.com/company/moosend",
+      "https://x.com/moosend"
+    ]
+  },
+  "schema:termsOfService": "https://moosend.com/",
+  "schema:license": "https://moosend.com/",
+  "schema:version": "v3",
+  "schema:applicationCategory": "Email Marketing, Marketing Automation",
+  "schema:keywords": [
+    "email marketing",
+    "marketing automation",
+    "campaigns",
+    "mailing lists",
+    "subscribers",
+    "segmentation",
+    "transactional email",
+    "SMTP",
+    "analytics",
+    "newsletter"
+  ]
+}

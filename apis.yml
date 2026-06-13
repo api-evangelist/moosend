@@ -69,6 +69,10 @@ common:
     url: rate-limits/moosend-rate-limits.yml
   - type: FinOps
     url: finops/moosend-finops.yml
+  - type: Blog
+    url: blogs/blogs.json
+  - type: JSONLd
+    url: json-ld/moosend-context.jsonld
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
