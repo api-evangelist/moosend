@@ -1,0 +1,99 @@
+name: Moosend API Rate Limits
+description: >-
+  Moosend enforces per-endpoint rate limits measured per API key to prevent the
+  API from being overwhelmed by too many requests. Limits vary by resource and
+  HTTP method. When a rate limit is exceeded, the API returns HTTP 429 with
+  a RATE-LIMITING error code in the response body.
+url: https://docs.moosend.com/api-documentation/articles/KnowledgeBase/54558-API-rate-limiting?lang=en_US
+specificationVersion: '0.1'
+rateLimits:
+  - name: Campaign Statistics Activity
+    description: Rate limit for retrieving campaign statistics activity reports.
+    endpoint: /campaigns/{id}/stats/activity
+    method: GET
+    limit: 2
+    period: 60
+    periodUnit: seconds
+    scope: api-key
+  - name: Add Subscriber
+    description: Rate limit for adding a single subscriber to a mailing list.
+    endpoint: /subscribers/{listId}/subscribe
+    method: POST
+    limit: 10
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Add Multiple Subscribers
+    description: Rate limit for bulk-adding multiple subscribers to a mailing list.
+    endpoint: /subscribers/{listId}/subscribe/many
+    method: POST
+    limit: 2
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Unsubscribe Account-Wide
+    description: Rate limit for unsubscribing an email address across all lists.
+    endpoint: /subscribers/unsubscribe
+    method: POST
+    limit: 20
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Unsubscribe from List
+    description: Rate limit for unsubscribing a subscriber from a specific mailing list.
+    endpoint: /subscribers/{listId}/unsubscribe
+    method: POST
+    limit: 20
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Unsubscribe from List and Campaign
+    description: >-
+      Rate limit for unsubscribing a subscriber from a specific list and
+      campaign combination.
+    endpoint: /subscribers/{listId}/{campaignId}/unsubscribe
+    method: POST
+    limit: 20
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Delete Subscriber
+    description: Rate limit for deleting a single subscriber from a mailing list.
+    endpoint: /subscribers/{listId}/remove
+    method: DELETE
+    limit: 40
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Delete Multiple Subscribers
+    description: Rate limit for bulk-deleting multiple subscribers from a mailing list.
+    endpoint: /subscribers/{listId}/remove/many
+    method: DELETE
+    limit: 8
+    period: 10
+    periodUnit: seconds
+    scope: api-key
+  - name: Send Transactional Campaign
+    description: Rate limit for sending transactional email campaigns.
+    endpoint: /campaigns/transactional/send
+    method: POST
+    limit: 6
+    period: 1
+    periodUnit: seconds
+    scope: api-key
+  - name: Manage Transactional Campaign
+    description: Rate limit for managing transactional campaign settings.
+    endpoint: /campaigns/transactional
+    method: POST
+    limit: 500
+    period: null
+    periodUnit: null
+    scope: api-key
+errorHandling:
+  httpStatus: 429
+  errorCode: RATE-LIMITING
+  description: >-
+    When a rate limit threshold is exceeded, the API returns HTTP status 429
+    with the error code RATE-LIMITING in the response body. Implement
+    exponential backoff and retry logic to handle rate limit responses
+    gracefully.

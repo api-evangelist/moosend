@@ -1,0 +1,93 @@
+name: Moosend FinOps
+description: >-
+  FinOps guidance for managing and optimizing Moosend API and platform costs.
+  Moosend uses contact-based subscription pricing where cost scales with the
+  size of your subscriber list. Additional costs arise from optional add-ons
+  (dedicated IPs, transactional emails, custom reports, hosted files, SSO/SAML)
+  and pay-as-you-go email credits. Optimizing contact hygiene and right-sizing
+  your subscriber tier are the primary cost levers.
+url: https://moosend.com/pricing/
+specificationVersion: '1.0'
+framework: FOCUS
+costAllocation:
+  - dimension: SubscriberCount
+    description: >-
+      The primary billing dimension. Monthly cost is determined by the number
+      of active contacts in your account. Regularly prune inactive or
+      unengaged subscribers to minimize costs.
+    unit: contacts
+  - dimension: EmailCredits
+    description: >-
+      Pay-as-you-go credits for businesses with variable send volumes. Credits
+      never expire, making them suitable for seasonal senders or batch campaigns.
+    unit: credits
+  - dimension: AddOns
+    description: >-
+      Optional add-on features (dedicated IPs, transactional email volume,
+      custom reports, hosted files, additional team members, SSO/SAML) that
+      incur additional costs on Moosend+ and Enterprise plans.
+    unit: feature
+optimization:
+  - name: Contact List Hygiene
+    description: >-
+      Regularly remove unengaged, bounced, and unsubscribed contacts to keep
+      your billable subscriber count in the lowest applicable pricing tier.
+      Even small reductions can drop you to a cheaper tier.
+    impact: high
+  - name: Annual Billing Discount
+    description: >-
+      Switch from monthly to annual billing to receive a 20% discount on the
+      Pro plan. Biannual billing yields a 15% discount.
+    impact: medium
+  - name: Right-Size Subscriber Tier
+    description: >-
+      Monitor your active contact count against tier thresholds. Proactively
+      suppress or archive contacts approaching the next tier boundary to avoid
+      unintentional tier upgrades.
+    impact: high
+  - name: Evaluate Pay-As-You-Go Credits
+    description: >-
+      For seasonal senders or businesses with irregular send volumes, email
+      credits (never expire) may be more cost-effective than a monthly Pro
+      subscription. Compare annual Pro cost against projected credit usage.
+    impact: medium
+  - name: Optimize Transactional Email Volume
+    description: >-
+      Transactional emails are an optional add-on on Moosend+ and may be
+      bundled into Enterprise. Audit transactional send volume to ensure you
+      are on the most cost-effective tier or add-on configuration.
+    impact: medium
+  - name: Consolidate Team Members
+    description: >-
+      Additional team member seats are a paid add-on on Moosend+. Review
+      access regularly and remove seats for departed team members to avoid
+      unnecessary costs.
+    impact: low
+budgeting:
+  - name: Monthly Subscriber Count Forecast
+    description: >-
+      Project subscriber growth monthly to anticipate tier transitions and
+      include them in budget planning. Factor in list growth from campaigns,
+      sign-up forms, and integrations.
+  - name: Add-On Audit
+    description: >-
+      Quarterly review of active Moosend+ add-ons to confirm each is actively
+      used and delivering value. Disable add-ons that are no longer needed.
+  - name: Credit Balance Monitoring
+    description: >-
+      Monitor remaining email credit balance to avoid campaign disruption.
+      Credits never expire, so there is no urgency to deplete them, but ensure
+      sufficient balance before high-volume send periods.
+tagging:
+  - name: team
+    description: Tag costs by team or business unit consuming Moosend services.
+  - name: campaign-type
+    description: Distinguish between marketing campaign and transactional email costs.
+  - name: environment
+    description: Separate production and test/staging usage where applicable.
+pricingReference:
+  url: https://moosend.com/pricing/
+  notes: >-
+    Moosend pricing is contact-based and updated periodically. Verify current
+    tier pricing on the official pricing page before budgeting. Enterprise and
+    Moosend+ pricing require contacting Moosend sales.

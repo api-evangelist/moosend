@@ -1,0 +1,74 @@
+aid: moosend
+name: Moosend
+description: >-
+  Moosend is an email marketing and automation platform with a REST API for
+  managing mailing lists, campaigns, subscribers, automations, and tracking
+  email performance metrics. The API uses HTTPS with API key authentication and
+  provides programmatic access to email lists, subscriber management, campaign
+  creation and scheduling, audience segmentation, transactional emails, and
+  real-time reporting.
+type: Index
+image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+url: https://raw.githubusercontent.com/api-evangelist/moosend/refs/heads/main/apis.yml
+created: '2026-06-13'
+modified: '2026-06-13'
+specificationVersion: '0.19'
+tags:
+  - Email Marketing
+  - Marketing Automation
+  - Campaigns
+  - Mailing Lists
+  - Subscribers
+  - Transactional Email
+  - SMTP
+  - Segmentation
+  - Analytics
+apis:
+  - aid: moosend:moosend-api
+    name: Moosend API
+    description: >-
+      The Moosend REST API (v3) enables programmatic access to email marketing
+      and automation capabilities including managing email lists, subscribers,
+      campaigns, segments, and transactional emails. Authentication is via API
+      key passed as a query string parameter.
+    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    humanURL: https://moosend.com/
+    baseURL: https://api.moosend.com/v3
+    tags:
+      - Email Marketing
+      - Campaigns
+      - Subscribers
+      - Mailing Lists
+      - Segmentation
+      - Transactional Email
+    properties:
+      - type: Documentation
+        url: https://docs.moosend.com/developers/api-documentation/en/index-en.html
+      - type: OpenAPI
+        url: https://moosendapp.docs.apiary.io/
+common:
+  - type: Website
+    url: https://moosend.com/
+  - type: Documentation
+    url: https://docs.moosend.com/developers/api-documentation/en/index-en.html
+  - type: GitHubOrg
+    url: https://github.com/moosend
+  - type: LinkedIn
+    url: https://www.linkedin.com/company/moosend
+  - type: Blog
+    url: https://moosend.com/blog/
+  - type: Pricing
+    url: https://moosend.com/pricing/
+  - type: StatusPage
+    url: https://status.moosend.com/
+  - type: X
+    url: https://x.com/moosend
+  - type: Plans
+    url: plans/moosend-plans-pricing.yml
+  - type: RateLimits
+    url: rate-limits/moosend-rate-limits.yml
+  - type: FinOps
+    url: finops/moosend-finops.yml
+maintainers:
+  - FN: Kin Lane
+    email: kin@apievangelist.com

@@ -1,0 +1,138 @@
+name: Moosend Plans and Pricing
+description: >-
+  Moosend offers contact-based subscription pricing with a free 30-day trial,
+  a Pro plan scaled by subscriber count, a customizable Moosend+ plan, an
+  Enterprise plan, and pay-as-you-go email credits. All paid plans include
+  unlimited email sends, marketing automation, landing pages, SMTP server
+  access, and the full API.
+url: https://moosend.com/pricing/
+specificationVersion: '0.1'
+plans:
+  - name: Free Trial
+    description: >-
+      30-day trial with no credit card required. Provides access to all core
+      features with up to 1,000 contacts and unlimited email sends.
+    price: 0
+    currency: USD
+    billingCycle: one-time
+    features:
+      - Up to 1,000 contacts
+      - Unlimited email sends
+      - Email builder and templates
+      - AI Writer
+      - Marketing automation workflows
+      - Landing pages
+      - Subscription forms
+      - Email and live chat support
+  - name: Pro
+    description: >-
+      The core paid plan for growing businesses. Pricing scales with contact
+      list size. Includes unlimited email campaigns, full automation, API
+      access, landing pages, SMTP server, and transactional emails.
+    price: 9
+    currency: USD
+    billingCycle: monthly
+    pricingURL: https://moosend.com/pricing/
+    features:
+      - Unlimited email campaigns
+      - Marketing automation workflows
+      - Landing pages and subscription forms
+      - SMTP server
+      - Transactional emails
+      - Real-time reporting and analytics
+      - A/B testing
+      - Full API access
+      - Email and live chat support
+    tiers:
+      - name: 500 contacts
+        price: 9
+        unit: month
+      - name: 1,000 contacts
+        price: 16
+        unit: month
+      - name: 2,000 contacts
+        price: 24
+        unit: month
+      - name: 3,000 contacts
+        price: 32
+        unit: month
+      - name: 5,000 contacts
+        price: 48
+        unit: month
+      - name: 10,000 contacts
+        price: 88
+        unit: month
+      - name: 25,000 contacts
+        price: 160
+        unit: month
+      - name: 50,000 contacts
+        price: 315
+        unit: month
+      - name: 1,000,000 contacts
+        price: 5840
+        unit: month
+    discounts:
+      - type: biannual
+        percentage: 15
+      - type: annual
+        percentage: 20
+  - name: Moosend+
+    description: >-
+      Customizable plan built on Pro with optional enterprise add-ons. Contact
+      sales for pricing. Lets you select exactly the add-ons your business needs.
+    price: custom
+    currency: USD
+    billingCycle: monthly
+    pricingURL: https://moosend.com/pricing/
+    features:
+      - All Pro plan features
+      - Dedicated IPs (add-on)
+      - Transactional emails (add-on)
+      - Audience discovery (add-on)
+      - Custom reports and dashboards (add-on)
+      - Hosted files (add-on)
+      - Additional team members (add-on)
+      - SSO and SAML (add-on)
+  - name: Enterprise
+    description: >-
+      Full-featured enterprise plan with a dedicated account manager, priority
+      support, SLA agreements, deliverability optimization, and custom pricing.
+      Includes all Pro and Moosend+ features.
+    price: custom
+    currency: USD
+    billingCycle: monthly
+    pricingURL: https://moosend.com/pricing/
+    features:
+      - All Pro and Moosend+ features
+      - Dedicated account manager
+      - Priority support
+      - Deliverability and strategy optimization
+      - 10+ team members
+      - Custom reports
+      - SLA agreements
+  - name: Email Credits
+    description: >-
+      Pay-as-you-go option for businesses with variable send volumes. Credits
+      never expire and can be used for bulk email sends without a monthly
+      subscription.
+    price: 350
+    currency: USD
+    billingCycle: one-time
+    pricingURL: https://moosend.com/pricing/
+    features:
+      - Credits never expire
+      - No monthly subscription required
+      - Use for bulk email campaigns
+    tiers:
+      - name: 350,000 credits
+        price: 350
+        unit: one-time
+      - name: 500,000 credits
+        price: 500
+        unit: one-time
+      - name: 750,000 credits
+        price: 750
+        unit: one-time
+      - name: 1,000,000 credits
+        price: 1000
+        unit: one-time
