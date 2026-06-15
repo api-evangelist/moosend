@@ -4,5 +4,17 @@
   "url": "https://moosend.com/blog/",
   "rssUrl": "https://moosend.com/feed/",
   "confirmed": true,
-  "lastChecked": "2026-06-13"
+  "lastChecked": "2026-06-13",
+  "repo": "moosend",
+  "feeds": [
+    {
+      "source": "https://www.linkedin.com/company/moosend",
+      "feed_url": "https://www.linkedin.com/company/moosend",
+      "title": "",
+      "saved": 0,
+      "method": "none"
+    }
+  ],
+  "post_count": 0,
+  "fetched": "2026-06-14T20:42:17Z"
 }
