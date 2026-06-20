@@ -8,7 +8,7 @@ description: >-
   creation and scheduling, audience segmentation, transactional emails, and
   real-time reporting.
 type: Index
-image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
 url: https://raw.githubusercontent.com/api-evangelist/moosend/refs/heads/main/apis.yml
 created: '2026-06-13'
 modified: '2026-06-13'
@@ -31,7 +31,7 @@ apis:
       and automation capabilities including managing email lists, subscribers,
       campaigns, segments, and transactional emails. Authentication is via API
       key passed as a query string parameter.
-    image: https://kinlane-productions.s3.amazonaws.com/apis-json/apis-json-logo.jpg
+    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
     humanURL: https://moosend.com/
     baseURL: https://api.moosend.com/v3
     tags:
