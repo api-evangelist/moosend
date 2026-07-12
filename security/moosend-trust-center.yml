@@ -1,0 +1,12 @@
+generated: '2026-07-11'
+method: searched
+probe: true
+source: https://moosend.com/trust/
+url: https://moosend.com/trust/
+certifications:
+- GDPR
+evidence:
+- source: https://moosend.com/trust/
+  keywords:
+  - trust center
+  - gdpr

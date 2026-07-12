@@ -1,0 +1,27 @@
+generated: '2026-07-11'
+method: probed
+source: live DNS/TLS/HTTP probes of apis.yml + OpenAPI hosts
+hosts:
+- host: moosend.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Apr  6 16:03:03 2027 GMT
+  hsts: false
+- host: api.moosend.com
+  https: true
+  tls_version: TLSv1.3
+  cert_expires: Aug 28 18:02:44 2026 GMT
+  hsts: null
+domains:
+- domain: moosend.com
+  dnssec: false
+  caa:
+  - 0 issue "amazontrust.com"
+  - 0 issue "awstrust.com"
+  - 0 issue "comodoca.com"
+  - 0 issue "digicert.com"
+  - 0 issue "globalsign.com"
+  - 0 issue "letsencrypt.org"
+  spf: true
+  dmarc: true
+  dmarc_policy: reject
