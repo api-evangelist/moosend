@@ -23,7 +23,7 @@ accessModel:
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/moosend.png
 url: https://raw.githubusercontent.com/api-evangelist/moosend/refs/heads/main/apis.yml
 created: '2026-06-13'
-modified: '2026-06-13'
+modified: '2026-08-13'
 specificationVersion: '0.19'
 tags:
   - Email Marketing
@@ -35,6 +35,11 @@ tags:
   - SMTP
   - Segmentation
   - Analytics
+  - Email
+  - Newsletters
+  - Landing Pages
+  - Website Tracking
+  - Marketing
 apis:
   - aid: moosend:moosend-api
     name: Moosend API
@@ -55,10 +60,22 @@ apis:
       - Transactional Email
     properties:
       - type: Documentation
-        url: https://docs.moosend.com/developers/api-documentation/en/index-en.html
-      - type: OpenAPI
+        url: https://docs.moosend.com/api-documentation?lang=en_US
+      - type: APIReference
         url: https://moosendapp.docs.apiary.io/
+      - type: OpenAPI
+        url: openapi/moosend-openapi.yml
+      - type: Overlay
+        url: overlays/moosend-openapi-overlay.yaml
+      - type: ErrorCatalog
+        url: errors/moosend-problem-types.yml
+      - type: DataModel
+        url: data-model/moosend-data-model.yml
+      - type: MCPServer
+        url: mcp/moosend-mcp.yml
 common:
+  - type: Authentication
+    url: authentication/moosend-authentication.yml
   - type: TrustCenter
     url: security/moosend-trust-center.yml
   - type: DomainSecurity
@@ -66,8 +83,26 @@ common:
   - type: Website
     url: https://moosend.com/
   - type: Documentation
-    url: https://docs.moosend.com/developers/api-documentation/en/index-en.html
-  - type: GitHubOrg
+    url: https://docs.moosend.com/api-documentation?lang=en_US
+  - type: DeveloperPortal
+    url: https://moosend.com/api/
+  - type: APIReference
+    url: https://moosendapp.docs.apiary.io/
+  - type: HelpCenter
+    url: https://docs.moosend.com/user-guide?lang=en_US
+  - type: Support
+    url: https://moosend.com/contact-us/support/
+  - type: SignUp
+    url: https://identity.moosend.com/register/
+  - type: Login
+    url: https://app.moosend.com/login
+  - type: TermsOfService
+    url: https://moosend.com/terms/
+  - type: PrivacyPolicy
+    url: https://moosend.com/privacy-policy/
+  - type: Integrations
+    url: https://moosend.com/integrations/
+  - type: GitHubOrganization
     url: https://github.com/moosend
   - type: LinkedIn
     url: https://www.linkedin.com/company/moosend
@@ -76,7 +111,7 @@ common:
   - type: Pricing
     url: https://moosend.com/pricing/
   - type: StatusPage
-    url: https://status.moosend.com/
+    url: https://moosend.statuspage.io
   - type: X
     url: https://x.com/moosend
   - type: Plans
@@ -89,6 +124,50 @@ common:
     url: blogs/blogs.json
   - type: JSONLD
     url: json-ld/moosend-context.jsonld
+  - type: Packages
+    url: packages/moosend-packages.yml
+  - type: SDKs
+    url: packages/moosend-packages.yml
+  - type: LLMsTxt
+    url: llms/moosend-llms.txt
+  - type: MCPServer
+    url: mcp/moosend-mcp.yml
+  - type: AgentSkill
+    url: skills/_index.yml
+  - type: Conventions
+    url: conventions/moosend-conventions.yml
+  - type: ErrorCatalog
+    url: errors/moosend-problem-types.yml
+  - type: Lifecycle
+    url: lifecycle/moosend-lifecycle.yml
+  - type: DataModel
+    url: data-model/moosend-data-model.yml
+  - type: Components
+    url: components/moosend-components.yml
+  - type: Conformance
+    url: conformance/moosend-conformance.yml
+  - type: Compliance
+    url: https://moosend.com/trust/compliance/
+  - type: VulnerabilityDisclosure
+    url: security/moosend-vulnerability-disclosure.yml
+  - type: Security
+    url: https://moosend.com/privacy-policy/disclosure/
+  - type: Overlay
+    url: overlays/moosend-openapi-overlay.yaml
 maintainers:
   - FN: Kin Lane
     email: kin@apievangelist.com
+x-enrichment:
+  date: '2026-08-13'
+  status: enriched
+  artifacts_added: 21
+  pass: local-v1
+  contract_discovery: >-
+    STEP 0b found Moosend's real machine-readable contract at
+    https://moosendapp.docs.apiary.io/api-description-document — an API Blueprint
+    1A document (270KB, 49 documented operations, HOST https://api.moosend.com/v3)
+    that the previous round had catalogued only as an HTML docs link. Saved
+    verbatim to openapi/_original/ and transcribed to OpenAPI 3.1.0 at
+    openapi/moosend-openapi.yml (47 path+method operations after merging two
+    duplicate definitions). Ownership confirmed: the blueprint's own HOST
+    declaration, title and example URLs all name api.moosend.com.
