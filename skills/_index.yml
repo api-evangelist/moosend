@@ -1,0 +1,51 @@
+generated: '2026-08-13'
+method: generated
+source: >-
+  Grounded in openapi/moosend-openapi.yml (transcribed from Moosend's published
+  API Blueprint), conventions/moosend-conventions.yml,
+  errors/moosend-problem-types.yml and rate-limits/moosend-rate-limits.yml.
+  Every operationId referenced was verified against the spec.
+note: >-
+  Moosend publishes no AGENTS.md or first-party agent skills; these are generated
+  operating instructions, not provider-authored ones.
+
+skills:
+  - file: moosend-grow-a-mailing-list.md
+    name: Grow a Moosend mailing list
+    description: >-
+      Create a list with custom fields, then add or upsert subscribers singly and
+      in bulk, handling the silent partial-failure behaviour of the bulk import.
+    api: openapi/moosend-openapi.yml
+    operations: [creatingAMailingList, creatingACustomField, gettingAllActiveMailingLists, gettingMailingListDetails, addingSubscribers, addingMultipleSubscribers, gettingSubscribers]
+
+  - file: moosend-create-test-and-send-a-campaign.md
+    name: Create, test and send a Moosend campaign
+    description: >-
+      Draft against a verified sender and list, send a test, then schedule (undoable)
+      or send (irreversible, human-confirmed).
+    api: openapi/moosend-openapi.yml
+    operations: [gettingAllYourSenders, gettingSenderDetails, creatingADraftCampaign, updatingADraftCampaign, cloningAnExistingCampaign, testingACampaign, schedulingACampaign, unschedulingACampaign, sendingACampaign, gettingCampaignDetails]
+
+  - file: moosend-segment-an-audience.md
+    name: Segment a Moosend audience
+    description: >-
+      Build a segment from criteria on a mailing list, verify what it actually
+      matches, and target a campaign at it.
+    api: openapi/moosend-openapi.yml
+    operations: [gettingSegments, creatingANewEmptySegment, addingCriteriaToSegments, updatingSegmentCriteria, gettingSegmentDetails, gettingSegmentSubscribers, updatingASegment, deletingASegment]
+
+  - file: moosend-report-on-campaign-performance.md
+    name: Report on Moosend campaign performance
+    description: >-
+      Pull summary, per-type activity, link clicks and geography within the
+      two-calls-per-minute statistics budget.
+    api: openapi/moosend-openapi.yml
+    operations: [getAllCampaigns, getCampaignsByPageAndPagesize, gettingCampaignDetails, campaignSummary, getCampaignStatistics, linkActivity, activityByLocation, aBTestCampaignSummary]
+
+cross_cutting_rules:
+  - Every path takes a `.{Format}` extension — use `.json` — plus `Accept: application/json`.
+  - Every call requires `?apikey=<KEY>`; there is no header alternative and no scoped token.
+  - HTTP status is always 200. Branch on the body `Code` field; `0` is success.
+  - '`Code: 429` with `Error: "RATE-LIMITING"` is the rate-limit response. No Retry-After header.'
+  - No idempotency key exists. Never blind-retry a POST; re-read state first.
+  - sendingACampaign and unsubscribingSubscribersFromAccount are irreversible.

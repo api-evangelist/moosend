@@ -1,0 +1,90 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/moosend-openapi.yml, conventions/moosend-conventions.yml,
+  security/moosend-trust-center.yml, https://moosend.com/trust/compliance/
+
+standards:
+  - id: openapi-3.1
+    conforms: true
+    evidence: >-
+      openapi/moosend-openapi.yml is a valid OpenAPI 3.1.0 transcription of the
+      provider's published API Blueprint. Moosend itself publishes API Blueprint
+      1A, not OpenAPI.
+  - id: api-blueprint-1a
+    conforms: true
+    evidence: >-
+      The provider's own contract is API Blueprint FORMAT 1A, served at
+      https://moosendapp.docs.apiary.io/api-description-document.
+  - id: rest
+    conforms: partial
+    evidence: >-
+      Resource-oriented paths, but verbs are encoded in the path (/create,
+      /update, /delete) and every response is HTTP 200 regardless of outcome.
+  - id: http-status-semantics
+    conforms: false
+    evidence: >-
+      All 48 documented responses are 200; failures including rate limiting are
+      signalled in the body `Code` field. Rate limiting returns Code 429 with
+      HTTP 200.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: No application/problem+json; proprietary {Code, Error, Context} envelope.
+  - id: rfc9116-security-txt
+    conforms: false
+    evidence: /.well-known/security.txt returns 404 on all three Moosend hosts.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: No Sunset or Deprecation header support documented.
+  - id: rfc6749-oauth2
+    conforms: false
+    evidence: No OAuth surface. Authentication is a static API key in the query string.
+  - id: openid-connect
+    conforms: false
+    evidence: >-
+      The only OIDC discovery document on a Moosend host (docs.moosend.com) has
+      issuer https://login.salesforce.com and belongs to the Salesforce Experience
+      Cloud help centre, not to Moosend.
+  - id: json-api
+    conforms: false
+    evidence: Proprietary envelope; no application/vnd.api+json.
+  - id: idempotency-key
+    conforms: false
+    evidence: No idempotency key header or parameter in the contract or docs.
+  - id: ratelimit-headers-draft
+    conforms: false
+    evidence: >-
+      Rate limits are published and enforced per API key, but no RateLimit-*,
+      X-RateLimit-* or Retry-After response header is documented.
+  - id: asyncapi
+    conforms: false
+    evidence: No event, streaming or webhook surface is published.
+  - id: mcp
+    conforms: false
+    evidence: >-
+      No MCP server. mcp.moosend.com answers 200 to any path but serves the
+      Moosend web-app HTML shell from S3/CloudFront, not a JSON-RPC endpoint.
+  - id: a2a
+    conforms: false
+    evidence: >-
+      /.well-known/agent-card.json and /.well-known/agent.json return 404 on
+      moosend.com, api.moosend.com and docs.moosend.com.
+  - id: llms-txt
+    conforms: true
+    evidence: >-
+      https://moosend.com/llms.txt returns 200 with a real llms.txt (H1,
+      blockquote summary, ## Pages and ## Resources link lists, 180 links).
+      Saved verbatim to llms/moosend-llms.txt.
+
+compliance_programme:
+  published: true
+  url: https://moosend.com/trust/compliance/
+  certifications: [ISO 27001, Certified Senders Alliance, GDPR, NIST SP 800-171, PCI DSS alignment]
+  memberships: [M3AAWG]
+  artifact: security/moosend-trust-center.yml
+
+vulnerability_disclosure:
+  published: true
+  url: https://moosend.com/privacy-policy/disclosure/
+  platform: Bugcrowd
+  artifact: security/moosend-vulnerability-disclosure.yml

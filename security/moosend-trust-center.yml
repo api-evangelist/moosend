@@ -1,12 +1,79 @@
-generated: '2026-07-11'
+generated: '2026-08-13'
 method: searched
 probe: true
-source: https://moosend.com/trust/
+source: https://moosend.com/trust/compliance/
 url: https://moosend.com/trust/
+pages:
+  - {title: Trust center, url: 'https://moosend.com/trust/'}
+  - {title: Overview, url: 'https://moosend.com/trust/overview/'}
+  - {title: Compliance, url: 'https://moosend.com/trust/compliance/'}
+  - {title: Data Privacy, url: 'https://moosend.com/trust/data-privacy/'}
+  - {title: Data Security, url: 'https://moosend.com/trust/data-security/'}
+  - {title: Legal, url: 'https://moosend.com/trust/legal/'}
+  - {title: Vulnerability Disclosure Policy, url: 'https://moosend.com/privacy-policy/disclosure/'}
+
 certifications:
-- GDPR
+  - ISO 27001
+  - Certified Senders Alliance (CSA)
+  - GDPR
+  - NIST SP 800-171
+  - PCI DSS
+
+certification_detail:
+  - name: ISO 27001
+    status: certified
+    quote: >-
+      "Moosend follows this standard to support and maintain GDPR-aligned
+      practices." A certificate is available to view from the compliance page.
+  - name: Certified Senders Alliance (CSA)
+    status: certified
+    quote: >-
+      "Our CSA certification ensures Moosend meets strict industry standards for
+      email authentication."
+  - name: PCI DSS
+    status: aligned-not-certified
+    quote: >-
+      "We align with the PCI Security Standards Council to strengthen our
+      practices." PCI documentation is offered on the page. Alignment, not a
+      published AoC.
+  - name: NIST SP 800-171
+    status: referenced
+    quote: Described as setting "the security standards for protecting sensitive government data."
+  - name: GDPR
+    status: compliance-programme
+    quote: >-
+      The page notes "GDPR does not offer an official certification" and
+      describes Moosend's GDPR-aligned practices instead.
+
+memberships:
+  - name: M3AAWG
+    detail: >-
+      "an active member of M3AAWG, the leading global organization focused on
+      reducing email abuse."
+
+infrastructure:
+  provider: Amazon Web Services
+  detail: >-
+    "scalable cloud infrastructure, advanced data protection, and high
+    availability."
+  transport: SSL/TLS encryption with trusted sending IPs.
+
+not_found:
+  - SOC 2 Type I or Type II
+  - ISO 27017 / 27018
+  - HIPAA
+  - FedRAMP
+  - CSA STAR
+note: >-
+  No SOC 2 report is offered anywhere on the trust centre — the notable absence
+  for a US-market SaaS of this size. Superseded pages remain live under
+  /trust-old/ (privacy-policy, data-storage, gdpr, certifications).
+
 evidence:
-- source: https://moosend.com/trust/
-  keywords:
-  - trust center
-  - gdpr
+  - source: https://moosend.com/trust/compliance/
+    http_status: 200
+    fetched: '2026-08-13'
+    keywords: [iso 27001, pci security standards council, nist sp 800-171, m3aawg, certified senders alliance, gdpr, aws]
+  - source: https://moosend.com/trust/
+    http_status: 200
+    fetched: '2026-08-13'

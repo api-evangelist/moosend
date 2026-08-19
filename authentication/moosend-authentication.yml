@@ -1,0 +1,79 @@
+generated: '2026-08-13'
+method: searched
+source: openapi/moosend-openapi.yml
+docs: https://moosendapp.docs.apiary.io/api-description-document
+docs_note: >-
+  The Authentication section of Moosend's own published API Blueprint. The help
+  centre landing page at
+  https://docs.moosend.com/developers/api-documentation/en/index-en.html is a
+  Salesforce Experience Cloud shell and carries no auth reference of its own.
+
+summary:
+  types:
+    - apiKey
+  api_key_in:
+    - query
+  oauth2_flows: []
+  scopes: false
+  mtls: false
+  openid_connect: false
+
+schemes:
+  - name: apikeyQuery
+    type: apiKey
+    in: query
+    parameter: apikey
+    description: >-
+      Moosend account API key, supplied as the `apikey` query-string parameter on
+      every request. Generated and regenerated in the account Settings menu.
+    sources:
+      - openapi/moosend-openapi.yml
+    applied_to: all 47 operations
+    provider_quote: >-
+      "Authentication is achieved through the use of an API key. This is a unique
+      key for each account in our system... The API key must always be specified
+      as a parameter in the query string of the requesting URL."
+    example_form: https://api.moosend.com/v3/campaigns/create.json?apikey=YOUR_API_KEY
+
+credential_model:
+  granularity: one key per account
+  scopes_supported: false
+  per_integration_keys: false
+  expiry: none documented
+  rotation: manual, from the account Settings menu
+  revocation: regenerating the key invalidates the previous one
+  service_accounts: false
+
+findings:
+  - id: key-in-query-string
+    severity: high
+    detail: >-
+      The credential travels in the request URL, so it is written into web-server,
+      proxy and CDN access logs, browser history and Referer headers. Moosend
+      documents no `Authorization` header or custom-header alternative.
+    remediation_for_provider: >-
+      Accept the same key in an `Authorization: Bearer` or `X-Api-Key` header,
+      keeping the query parameter for backward compatibility.
+  - id: no-scopes
+    severity: high
+    detail: >-
+      A single account-wide key grants full read and write authority over every
+      mailing list, subscriber, segment and campaign — including irreversible
+      operations such as sending a campaign and unsubscribing an address
+      account-wide. There is no way to issue a reduced-privilege credential to an
+      integration or an agent.
+  - id: no-oauth
+    severity: medium
+    detail: >-
+      No OAuth 2.0 or OpenID Connect surface exists, so third-party applications
+      cannot act on a user's behalf without the user handing over their master
+      key. This also means no scopes/ artifact is emitted for this provider.
+  - id: no-expiry
+    severity: medium
+    detail: Keys do not expire and no rotation policy or reminder is documented.
+
+not_applicable:
+  scopes: >-
+    scopes/ is deliberately absent. The API declares no oauth2 security scheme
+    and the docs document no permission model, so an OAuthScopes artifact would
+    have nothing real to carry.

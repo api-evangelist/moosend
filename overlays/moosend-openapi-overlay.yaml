@@ -1,0 +1,90 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the Moosend API
+  version: 1.0.0
+extends: openapi/moosend-openapi.yml
+x-generated: '2026-08-13'
+x-method: generated
+x-source: >-
+  Enhancements derived from conventions/moosend-conventions.yml,
+  errors/moosend-problem-types.yml, rate-limits/moosend-rate-limits.yml and
+  lifecycle/moosend-lifecycle.yml. The underlying OpenAPI is a transcription of
+  Moosend's own API Blueprint and is never mutated in place.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-enriched: '2026-08-13'
+      x-contract-source: https://moosendapp.docs.apiary.io/api-description-document
+      x-contract-format: API Blueprint 1A
+      x-contract-last-edited: '2022-03-16'
+      x-error-envelope:
+        fields: [Code, Error, Context]
+        success_code: 0
+        note: >-
+          Failures are carried in the body, not the HTTP status line. Every
+          documented response is HTTP 200.
+      x-artifacts:
+        authentication: authentication/moosend-authentication.yml
+        conventions: conventions/moosend-conventions.yml
+        errors: errors/moosend-problem-types.yml
+        rate_limits: rate-limits/moosend-rate-limits.yml
+        lifecycle: lifecycle/moosend-lifecycle.yml
+        data_model: data-model/moosend-data-model.yml
+        skills: skills/_index.yml
+
+  - target: $.info
+    update:
+      x-agent-warnings:
+        - No idempotency key. Retrying a POST re-executes it.
+        - No RateLimit-* or Retry-After headers; back off from the published budgets.
+        - sendingACampaign is irreversible once the campaign leaves the queue.
+
+  - target: $.components.securitySchemes.apikeyQuery
+    update:
+      x-credential-scope: account-wide
+      x-scopes-supported: false
+      x-transport-risk: >-
+        The key travels in the query string and is therefore logged by proxies,
+        CDNs and web servers. There is no header-based alternative.
+
+  - target: $.paths['/subscribers/{MailingListID}/subscribe.{Format}'].post
+    update:
+      x-rate-limit: {limit: 10, window_seconds: 10, scope: api-key}
+      x-upsert: >-
+        Adding an email that already exists in the list performs an update
+        instead of failing.
+
+  - target: $.paths['/subscribers/{MailingListID}/subscribe_many.{Format}'].post
+    update:
+      x-rate-limit: {limit: 2, window_seconds: 10, scope: api-key}
+      x-partial-failure: >-
+        Invalid addresses are skipped, not rejected. The call returns Code 0 with
+        the skipped addresses listed as prose in the Error field.
+
+  - target: $.paths['/subscribers/unsubscribe.{Format}'].post
+    update:
+      x-rate-limit: {limit: 20, window_seconds: 10, scope: api-key}
+      x-consequence: account-wide
+
+  - target: $.paths['/subscribers/{MailingListID}/unsubscribe.{Format}'].post
+    update:
+      x-rate-limit: {limit: 20, window_seconds: 10, scope: api-key}
+
+  - target: $.paths['/subscribers/{MailingListID}/{CampaignID}/unsubscribe.{Format}'].post
+    update:
+      x-rate-limit: {limit: 20, window_seconds: 10, scope: api-key}
+
+  - target: $.paths['/campaigns/{CampaignID}/stats/{Type}.{Format}'].get
+    update:
+      x-rate-limit: {limit: 2, window_seconds: 60, scope: api-key}
+
+  - target: $.paths['/campaigns/{CampaignID}/send.{Format}'].post
+    update:
+      x-consequence: irreversible
+      x-human-in-the-loop: recommended
+      x-note: Delivers the campaign to its audience. There is no recall operation.
+
+  - target: $.paths['/lists/{MailingListID}/delete.{Format}'].delete
+    update:
+      x-consequence: destructive
+      x-human-in-the-loop: recommended

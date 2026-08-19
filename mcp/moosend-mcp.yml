@@ -1,0 +1,141 @@
+generated: '2026-08-13'
+method: derived
+status: candidate
+source: openapi/moosend-openapi.yml
+
+deployment:
+  mode: none
+  endpoint: null
+  install: null
+  package: null
+  auth: api-key
+  verified: probed
+  note: >-
+    Moosend ships no MCP server, hosted or local. Nothing in the npm registry
+    search for "moosend" is an MCP package (the hits are @moosend/mooskin,
+    moosend-api, mootracker and a third-party Pipedream connector). The tools
+    below are a DERIVED candidate set from the OpenAPI operations, not a product.
+
+probes:
+  - url: https://mcp.moosend.com/mcp
+    method: POST tools/list
+    http_status: 200
+    verdict: rejected
+    reason: >-
+      Returns text/html (4,723 bytes) from AmazonS3 via CloudFront — the Moosend
+      web-app single-page shell, titled "Manage, create and send your email
+      campaigns". mcp.moosend.com is the application host and answers 200 for
+      every path. This is the SPA catch-all false positive, not an MCP endpoint.
+    checked: '2026-08-13'
+  - url: https://moosend.com/mcp
+    method: POST tools/list
+    http_status: 404
+    checked: '2026-08-13'
+  - url: https://api.moosend.com/mcp
+    method: POST tools/list
+    http_status: 404
+    checked: '2026-08-13'
+
+server:
+  name: moosend
+  transport: null
+  url: null
+
+auth_model:
+  scheme: apiKey
+  location: query
+  parameter: apikey
+  note: >-
+    Any MCP server built over this API would carry a single account-wide API key
+    with no scopes — every tool below would have full read/write authority over
+    every list, subscriber and campaign in the account. There is no way to issue
+    a reduced-privilege credential to an agent.
+
+tools:
+  - name: list_mailing_lists
+    description: List all active mailing lists in the account.
+    source_operation: openapi/moosend-openapi.yml#gettingAllActiveMailingLists
+  - name: get_mailing_list
+    description: Get the details of one mailing list, optionally with statistics.
+    source_operation: openapi/moosend-openapi.yml#gettingMailingListDetails
+  - name: create_mailing_list
+    description: Create a new empty mailing list.
+    source_operation: openapi/moosend-openapi.yml#creatingAMailingList
+  - name: update_mailing_list
+    description: Update the properties of an existing mailing list.
+    source_operation: openapi/moosend-openapi.yml#updatingAMailingList
+  - name: delete_mailing_list
+    description: Delete a mailing list from the account.
+    source_operation: openapi/moosend-openapi.yml#deletingAMailingList
+  - name: create_custom_field
+    description: Create a custom field on a mailing list.
+    source_operation: openapi/moosend-openapi.yml#creatingACustomField
+  - name: list_subscribers
+    description: List the subscribers of a mailing list filtered by status.
+    source_operation: openapi/moosend-openapi.yml#gettingSubscribers
+  - name: find_subscriber_by_email
+    description: Look up a subscriber in a list by email address.
+    source_operation: openapi/moosend-openapi.yml#getSubscriberByEmailAddress
+  - name: add_subscriber
+    description: Add or upsert a single subscriber into a mailing list.
+    source_operation: openapi/moosend-openapi.yml#addingSubscribers
+  - name: add_subscribers_bulk
+    description: Add or upsert many subscribers into a mailing list in one call.
+    source_operation: openapi/moosend-openapi.yml#addingMultipleSubscribers
+  - name: unsubscribe_from_list
+    description: Unsubscribe a subscriber from one mailing list.
+    source_operation: openapi/moosend-openapi.yml#unsubscribingSubscribersFromMailingList
+  - name: unsubscribe_from_account
+    description: Unsubscribe an email address across the whole account.
+    source_operation: openapi/moosend-openapi.yml#unsubscribingSubscribersFromAccount
+  - name: list_campaigns
+    description: List campaigns in the account.
+    source_operation: openapi/moosend-openapi.yml#getAllCampaigns
+  - name: get_campaign
+    description: Get the details of one campaign.
+    source_operation: openapi/moosend-openapi.yml#gettingCampaignDetails
+  - name: create_draft_campaign
+    description: Create a draft campaign.
+    source_operation: openapi/moosend-openapi.yml#creatingADraftCampaign
+  - name: send_test_campaign
+    description: Send a test of a campaign to named test recipients.
+    source_operation: openapi/moosend-openapi.yml#testingACampaign
+  - name: send_campaign
+    description: Send a campaign to its audience. Irreversible.
+    source_operation: openapi/moosend-openapi.yml#sendingACampaign
+  - name: schedule_campaign
+    description: Schedule a campaign for a future delivery time.
+    source_operation: openapi/moosend-openapi.yml#schedulingACampaign
+  - name: get_campaign_summary
+    description: Get the aggregate performance summary of a campaign.
+    source_operation: openapi/moosend-openapi.yml#campaignSummary
+  - name: get_campaign_statistics
+    description: Get a campaign activity report by type (opens, clicks, bounces, unsubscribes).
+    source_operation: openapi/moosend-openapi.yml#getCampaignStatistics
+  - name: list_senders
+    description: List the verified sender addresses on the account.
+    source_operation: openapi/moosend-openapi.yml#gettingAllYourSenders
+  - name: list_segments
+    description: List the segments defined on a mailing list.
+    source_operation: openapi/moosend-openapi.yml#gettingSegments
+  - name: get_segment_members
+    description: List the subscribers matching a segment.
+    source_operation: openapi/moosend-openapi.yml#gettingSegmentSubscribers
+  - name: create_segment
+    description: Create a segment on a mailing list.
+    source_operation: openapi/moosend-openapi.yml#creatingANewEmptySegment
+  - name: add_segment_criteria
+    description: Add matching criteria to an existing segment.
+    source_operation: openapi/moosend-openapi.yml#addingCriteriaToSegments
+
+high_consequence_tools:
+  - tool: send_campaign
+    reason: Delivers email to a real audience. Cannot be recalled once sent.
+  - tool: unsubscribe_from_account
+    reason: Removes an address from every list in the account.
+  - tool: delete_mailing_list
+    reason: Destructive and account-wide.
+
+high_consequence_note: >-
+  Any deployment of this candidate set should gate the tools above behind human
+  confirmation — the API offers no scoped credential to enforce it.

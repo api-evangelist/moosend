@@ -1,0 +1,95 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://moosendapp.docs.apiary.io/api-description-document,
+  https://moosend.statuspage.io/api/v2/summary.json,
+  https://moosend.com/moosend-constant-contact-faqs/
+
+versioning:
+  scheme: uri-path
+  current: v3
+  base: https://api.moosend.com/v3
+  previous: v2
+  docs: https://docs.moosend.com/developers/api-documentation/en/index-en.html
+  note: >-
+    v2 is evidenced only by a still-published NuGet package (moosend 2.0.1,
+    2014-09-27). Moosend publishes no migration guide from v2 to v3 and no
+    statement about whether v2 is still served.
+
+contract_currency:
+  source: Apiary API Blueprint
+  url: https://moosendapp.docs.apiary.io/api-description-document
+  last_edited: '2022-03-16'
+  note: >-
+    Apiary reports lastUpdated 2022-03-16T16:38:32Z for the moosendapp document —
+    the v3 contract has not been revised in over four years.
+
+deprecation:
+  policy_url: null
+  sunset_header: false
+  deprecation_header: false
+  deprecated_operations: []
+  note: >-
+    No deprecation policy, no RFC 8594 Sunset/Deprecation header support, and no
+    operation in the contract is marked deprecated. No `Deprecation` pointer is
+    emitted in apis.yml because there is nothing to point at.
+
+status_page:
+  url: https://moosend.statuspage.io
+  provider: Atlassian Statuspage
+  page_id: 4vlc70drl6th
+  api: https://moosend.statuspage.io/api/v2/summary.json
+  components:
+    - Login
+    - Landing Pages
+    - Forms
+    - SMTP
+    - API & Integrations
+    - Campaign Flow
+    - Members
+    - Automations
+    - Statistics
+    - Editor
+    - Platform
+  defect:
+    vanity_host: https://status.moosend.com/
+    dns: CNAME 4mc91wxb1z5j.stspg-customer.com
+    observed: >-
+      TLS handshake fails — the certificate presented is CN=*.statuspage.io and
+      subjectAltName does not match status.moosend.com, so every HTTPS client
+      aborts the connection (curl exit 60, effective status 000).
+    checked: '2026-08-13'
+    impact: >-
+      The branded status URL Moosend advertises is unreachable over HTTPS. The
+      working URL is the underlying moosend.statuspage.io. The apis.yml
+      StatusPage pointer has been moved to the working host.
+
+sla:
+  url: null
+  uptime_target: null
+  note: No published SLA or uptime commitment was found on moosend.com or the trust centre.
+
+changelog:
+  url: null
+  note: >-
+    No dated public changelog or release-notes feed was found. /release-notes/,
+    /whats-new/ and the docs release-notes path all return 404. The help centre
+    surfaces a "What's New" heading but no addressable dated feed. No changelog/
+    artifact is emitted.
+
+ownership:
+  parent: Constant Contact
+  previous_parent: Sitecore
+  evidence:
+    - https://moosend.com/moosend-constant-contact-faqs/
+    - >-
+      The moosend.com application shell Content-Security-Policy names
+      constantcontact.com, *.constantcontact.com and the Salesforce sandbox hosts
+      alongside legacy sitecorecloud.io / sitecoresend.io origins.
+  provider_statement: >-
+    "Moosend is here to stay... Existing APIs, automations, integrations, and
+    workflows will continue to operate consistently." — Moosend/Constant Contact FAQ.
+  api_impact: >-
+    No sunset announced for the v3 API. Recorded because the platform has changed
+    hands twice (Sitecore 2021, Constant Contact) and the contract has been frozen
+    since 2022.

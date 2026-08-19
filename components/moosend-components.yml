@@ -1,0 +1,67 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://github.com/moosend (mooskin-ui, website-tracking-js,
+  website-tracking-php, website-tracking-modules-magento,
+  website-tracking-modules-cscart) and the npm/Packagist registry metadata for
+  each.
+
+families:
+  - name: Website & e-commerce tracking
+    description: >-
+      A client-side tracking library that reports page views, product views,
+      add-to-cart and completed purchases back into Moosend so automations and
+      segments can trigger on behaviour. This is the embeddable surface Moosend
+      actually asks customers to install; it is separate from the v3 REST API.
+    loader:
+      language: javascript
+      package: mootracker
+      registry: npm
+      version: 0.13.9
+      published: '2020-08-19'
+      source_code: https://github.com/moosend/website-tracking-js
+      types_shipped: true
+    server_side_companions:
+      - {language: php, package: 'moosend/website-tracking', registry: packagist, version: 1.12.67, published: '2023-07-04'}
+      - {language: php, package: 'moosend/tracker', registry: packagist, version: 1.12.67, published: '2023-07-04'}
+    platform_modules:
+      - {platform: Magento 2, package: 'moosend/module-mootracker', registry: packagist, version: 1.0.13, published: '2023-07-04', source_code: 'https://github.com/moosend/website-tracking-modules-magento'}
+      - {platform: CS-Cart, package: null, registry: null, source_code: 'https://github.com/moosend/website-tracking-modules-cscart', note: 'Source only, never published to a registry. Last pushed 2020-11-30.'}
+
+  - name: Mooskin UI
+    description: >-
+      Moosend's React component library — the design system behind the Moosend
+      application, published publicly on npm. Useful to anyone embedding or
+      extending Moosend UI; not a data-plane component.
+    loader:
+      language: typescript
+      package: '@moosend/mooskin'
+      registry: npm
+      version: 1.1.5
+      published: '2025-09-25'
+      versions_published: 284
+      source_code: https://github.com/moosend/mooskin-ui
+      types_shipped: true
+    note: The only actively released Moosend package.
+
+hosted_surfaces:
+  - name: Subscription forms
+    description: >-
+      Hosted and embeddable signup forms (inline, popup, floating) built in the
+      Moosend application. Configured in-product; no published component API.
+    docs: https://moosend.com/features/
+    programmatic_control: false
+  - name: Landing pages
+    description: Hosted landing pages built in the Moosend editor.
+    docs: https://moosend.com/features/
+    programmatic_control: false
+
+gaps:
+  - >-
+    No embeddable component is addressable from the v3 REST API — forms, landing
+    pages and automations have no operations in the published contract, so an
+    integrator can render them but cannot create or manage them programmatically.
+  - >-
+    mootracker has had no release since August 2020 and is not distributed from a
+    documented CDN URL; the supported install path is the npm package or the
+    in-product script snippet.

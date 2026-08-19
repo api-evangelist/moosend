@@ -1,0 +1,148 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://moosendapp.docs.apiary.io/api-description-document (the Moosend API
+  Blueprint, "Getting started with Moosend API" preamble) and
+  https://docs.moosend.com/api-documentation/articles/KnowledgeBase/54558-API-rate-limiting
+derived_from: openapi/moosend-openapi.yml
+
+authentication:
+  style: api-key
+  transport: query-string
+  parameter: apikey
+  required_on: every request
+  quote: >-
+    "The API key must always be specified as a parameter in the query string of
+    the requesting URL" — Moosend API Blueprint, Authentication section.
+  rotation: Generated and regenerated in the account Settings menu.
+  risk_note: >-
+    Because the key travels in the query string it is written to proxy, CDN and
+    server access logs and to browser history. There is no header alternative
+    documented, and no OAuth, scoped-token or per-integration credential.
+  artifact: authentication/moosend-authentication.yml
+
+content_negotiation:
+  style: url-extension
+  parameter: '{Format}'
+  values: [json, xml]
+  note: >-
+    Unusually, the response format is a path-segment extension, not an Accept
+    header — /lists/create.json vs /lists/create.xml. Every path in the contract
+    ends in `.{Format}`.
+  accept_header_also_required: true
+  accept_values:
+    json: application/json
+    xml: application/xhtml+xml,application/xml
+
+request_encoding:
+  get: All parameters in the query string.
+  post: >-
+    application/x-www-form-urlencoded body. The Blueprint states "Currently, the
+    API accepts only URL-encoded data in the request stream", while its own
+    examples show JSON request bodies with Content-Type application/json — the
+    two statements in the published contract disagree.
+  delete: Parameters in the query string.
+  methods_used: [GET, POST, DELETE]
+  note: PUT and PATCH are not used; updates are POST to an /update path.
+
+response_envelope:
+  shape: object
+  fields:
+    - name: Code
+      description: >-
+        Response code. 0 on success. Non-zero carries the failure — 429 is
+        returned in this field for rate limiting.
+    - name: Error
+      description: Human-readable error message. null on success.
+    - name: Context
+      description: >-
+        The actual payload. Varies by operation — a created object's id, a
+        paged result object, or null.
+  success_example: '{"Code": 0, "Error": null, "Context": "6ca52d31-765c-4760-a78e-91e511e49d76"}'
+  note: >-
+    Errors are carried in the body, not the HTTP status line. All 48 responses
+    documented in the Blueprint are HTTP 200, including the rate-limit response.
+    A client cannot rely on the status code and MUST inspect `Code`.
+  artifact: errors/moosend-problem-types.yml
+
+pagination:
+  style: page-number
+  parameters:
+    - name: Page
+      in: path
+      description: 1-based page number.
+    - name: PageSize
+      in: path
+      description: Items per page.
+  variants: >-
+    Paging is expressed as separate operations with different paths rather than
+    as optional query parameters — /lists.{Format} vs
+    /lists/{Page}/{PageSize}.{Format}, /campaigns.{Format} vs
+    /campaigns/{Page}.{Format} vs /campaigns/{Page}/{PageSize}.{Format}.
+  response_fields: [Paging.PageSize, Paging.CurrentPage, Paging.TotalResults, Paging.TotalPageCount]
+  cursor_support: false
+
+filtering_and_sorting:
+  parameters:
+    - {name: SortBy, in: query, note: also spelled ShortBy on the mailing-list operations in the published contract}
+    - {name: SortMethod, in: query}
+    - {name: From, in: query, note: campaign statistics date filter}
+    - {name: To, in: query, note: campaign statistics date filter}
+    - {name: WithStatistics, in: query}
+  field_expansion: not supported
+  sparse_fieldsets: not supported
+
+idempotency:
+  supported: false
+  header: null
+  note: >-
+    Moosend documents no idempotency key, no request-id echo and no retry
+    contract. Repeated POSTs to /campaigns/{CampaignID}/send.{Format} or
+    /campaigns/create.{Format} are not deduplicated by the API. The one
+    idempotent-by-design write is /subscribers/{MailingListID}/subscribe —
+    "If there is already a subscriber with the specified email address in the
+    list, an update will be performed instead" — which is an upsert, not an
+    idempotency contract. No `Idempotency` pointer is emitted in apis.yml.
+
+request_tracing:
+  request_id_header: null
+  note: No correlation or request-id header is documented on requests or responses.
+
+rate_limiting:
+  scope: per API key, per endpoint
+  signalling:
+    http_status_documented: 200
+    body_code: 429
+    body_error: RATE-LIMITING
+    example: '{"Code": 429, "Error": "RATE-LIMITING", "Context": null}'
+  response_headers: []
+  headers_note: >-
+    No X-RateLimit-*, RateLimit-* or Retry-After header is documented. An agent
+    has no runtime signal of remaining budget and must infer backoff from the
+    error body alone.
+  artifact: rate-limits/moosend-rate-limits.yml
+
+versioning:
+  scheme: uri-path
+  current: v3
+  base: https://api.moosend.com/v3
+  note: >-
+    v2 existed (a v2 .NET package is still on NuGet) but no migration or
+    deprecation notice is published.
+  artifact: lifecycle/moosend-lifecycle.yml
+
+identifiers:
+  style: uuid
+  examples:
+    MailingListID: a589366a-1a34-4965-ac50-f1299fe5979e
+    CampaignID: e0208b78-4dc9-4d1f-9a70-1b78b5cbd6a5
+  note: >-
+    Every resource id in the contract is an unprefixed UUID, so an id alone does
+    not identify its type.
+
+webhooks:
+  documented: false
+  note: >-
+    No webhook, callback or event-delivery surface is documented in the v3
+    contract or in the public help centre. No asyncapi/ artifact and no Webhooks
+    pointer is emitted.

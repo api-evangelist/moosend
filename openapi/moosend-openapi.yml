@@ -1,0 +1,4507 @@
+openapi: 3.1.0
+info:
+  title: Moosend API
+  version: v3
+  description: '#Moosend API
+
+
+    ## Getting started with Moosend API
+
+
+
+
+    Before making use of our API, please read the following carefully to get you started.
+
+
+
+    ## Making API Requests
+
+
+    Both API requests and responses have a format the data is expected to be sent or returned.
+
+
+    Requests consist of a URL that specifies which operation to also call, a query string and usually a request stream as
+    well, which specify parameters for the call. For each request there is a syntax pattern for the URL that must be followed
+    for the system to understand your intension. You may find the appropriate pattern for each call in the “Access URLs” sections
+    in our API Documentation pages.
+
+
+    Parameters in the query string or the request stream should be specified in a format like:
+
+
+    name1=value1&name2=value2&name3=value3&...
+
+
+    As you have probably noticed, each name-value pair is separated by a & character. Note also that special characters in
+    values should be URL-encoded. There are built-in URL-encoding functions in all major programming languages like C# and
+    PHP. Please refer to each language’s documentation for more information.
+
+
+    The request must also contain information about how you would like the response to be formatted. There are currently two
+    available formats for getting a response: **xml** and **json**. You have to specify the format in every API call as an
+    extension in the URL.
+
+
+    So let’s summarize all above with an example request URL and a couple of hypothetical parameters:
+
+
+    Example requesting response in xml format:
+
+
+    `http://api.moosend.com/v3/somepath/testmethod.xml?param1=value1&m2=value2+with+special+chars+like+%40`
+
+
+    Example requesting response in json format:
+
+
+    `http://api.moosend.com/v3/somepath/testmethod.json?param1=value1&m2=value2+with+special+chars+like+%40`
+
+
+    Note also that you must set the correct accept header in your application’s request in order to retrieve the response
+    data in the expected format.
+
+
+    For xml response you must set the accept header to: **application/xhtml+xml,application/xml**
+
+
+    For json response you must set the accept header to: **application/json**
+
+
+    ## Authentication
+
+
+    All API calls require authentication. This is essential for the API to identify which user is making the call so that
+    appropriate results will be returned, as well as for security reasons.
+
+
+    Authentication is achieved through the use of an API key. This is a unique key for each account in our system. You can
+    get your API key from the settings page in your account. Please keep your API key safe to prevent any unauthorized access.
+    Once you obtain your API key, you will have to use it in every API call you make. The API key must always be specified
+    as a parameter in the query string of the requesting URL, as in the example below:
+
+
+    `http://api.moosend.com/v3/campaigns/create.xml?apikey=YOUR_API_KEY`
+
+
+    You may find your API Key or generate a new one in the respective section under the Settings Menu.
+
+
+    ## Request Methods
+
+
+    There are 3 request methods that you will have to use in order to make full use of our API: GET, POST and DELETE. You
+    must set your application to make each API call using the appropriate request method, which is explicitly specified in
+    our API documentation pages for each call. Let us explain how these methods should be used:
+
+
+    **GET:** Used for retrieving data from your account in our system. All request parameters in this case are expected to
+    be found in the request URL, in a format specified explicitly for each API call. You can find detailed information on
+    how to specify parameters for each call in our API documentation pages. You may test a GET request in a web browser, by
+    entering the URL in the address bar. Don''t forget to include your API key parameter in the query string!
+
+
+    **POST:** Used for sending information to our system in order to modify data in your account. In this case request parameters
+    should be specified in the request stream. Only authentication and response format are usually expected to be found in
+    the URL, unless differently specified in the “Access URLs” section of our API Documentation pages. Currently, the API
+    accepts only URL-encoded data in the request stream, which is the same format as the one expected for parameter values
+    in the query string. Note also that the content-type header of the request to be made should be “application/x-www-form-urlencoded”.
+
+
+    **DELETE:** Used for deleting information from your account. No more different from POST regarding its use.
+
+
+    Below is an example of a *POST* request:
+
+
+    Request URL:
+
+
+    `http://api.moosend.com/v3/campaigns/create.xml?apikey=YOUR_API_KEY`
+
+
+    Request Stream:
+
+
+    *(assumes hypothetical parameters: Name = New campaign, Subject = Some cool subject, SenderEmail = info@example.com, WebLocation
+    = http://example.com/home/newsletter, MailingListID = 01234567-89ab-cdef-0123-456789abcdef)*
+
+
+    `Name=New+campaign&Subject=Some+cool+subject&SenderEmail=info%40example.com& WebLocation=http%3a%2f%2fexample.com%2fhome%2fnewsletter&MailingListID=01234567-89ab-cdef-0123-456789abcdef`
+
+
+    ## Changelog
+
+
+    + Added HasExternalDoubleOptIn property in [Adding subscribers](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/adding-subscribers)
+
+    + Added HasExternalDoubleOptIn property in [Adding multiple subscribers](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/adding-multiple-subscribers)
+
+    + Added HasExternalDoubleOptIn property in [Updating a subscriber](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/updating-a-subscriber)'
+  contact:
+    name: Moosend Support
+    url: https://moosend.com/support/
+  x-source: Transcribed from the Moosend API Blueprint published by Moosend at https://moosendapp.docs.apiary.io/api-description-document
+    (FORMAT 1A, HOST https://api.moosend.com/v3).
+servers:
+- url: https://api.moosend.com/v3
+tags:
+- name: Mailing Lists
+- name: Subscribers
+- name: Campaigns
+- name: Segments
+paths:
+  /lists.{Format}:
+    get:
+      operationId: gettingAllActiveMailingLists
+      summary: Getting all active mailing lists
+      description: Gets a list of your active mailing lists in your account.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: WithStatistics
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: ShortBy
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: SortMethod
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following information for the requested mailing list:'
+                  Paging:
+                    description: A list with all the following paging information.
+                  MailingLists:
+                    description: 'A list with mailing lists containing the following information for each list:'
+                  CreatedBy:
+                    description: The ip that requested mailing list was created from.
+                  CreatedOn:
+                    description: The date time that the requested mailing list was created.
+                  UpdatedBy:
+                    description: The ip that the requested mailing list was updated from.
+                  UpdatedOn:
+                    description: The date time that the requested mailing list was updated
+                  ImportOperation:
+                    description: The details of the latest import operation that was performed in the requested mailing list.
+                      This will be blank if no import operation was performed for this list.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 0
+                    CurrentPage: 1
+                    TotalResults: 90
+                    TotalPageCount: 9
+                    SortExpression: null
+                    SortIsAscending: false
+                  MailingLists:
+                  - ID: 04fad8e2-2b35-4302-a887-58f14a1152ab
+                    Name: Your List Name
+                    ActiveMemberCount: 1024
+                    BouncedMemberCount: 16
+                    RemovedMemberCount: 32
+                    UnsubscribedMemberCount: 24
+                    Status: 0
+                    CustomFieldsDefinition:
+                    - ID: dd4fb545-ba00-4afe-bc39-5ed2462fd1d3
+                      Name: City
+                      Context: null
+                      IsRequired: false
+                      Type: 0
+                    - ID: ae8500d7-d1df-4118-9a2c-6654a7d6a6db
+                      Name: Age
+                      Context: null
+                      IsRequired: true
+                      Type: 1
+                    CreatedBy: 127.0.0.1
+                    CreatedOn: /Date(1368710504000+0300)/
+                    UpdatedBy: 127.0.0.1
+                    UpdatedOn: /Date(1368710923000+0300)/
+                    ImportOperation:
+                      ID: 0
+                      DataHash: 97de8bcb-ca1c-4a4b-bf02-3f639952e093
+                      Mappings: Some Mappings
+                      EmailNotify: Some EmailNotify
+                      CreatedOn: /Date(1400765707431)/
+                      StartedOn: /Date(1400765707431)/
+                      CompletedOn: /Date(1400765707432)/
+                      TotalInserted: 0
+                      TotalUpdated: 0
+                      TotalUnsubscribed: 0
+                      TotalInvalid: 0
+                      TotalDuplicate: 0
+                      TotalMembers: 0
+                      Message: Some Message
+                      Success: false
+                  - ID: 4d90a60c-fad2-4f29-b541-318f0ea82be6
+                    Name: Some Name
+                    ActiveMemberCount: 0
+                    BouncedMemberCount: 0
+                    RemovedMemberCount: 0
+                    UnsubscribedMemberCount: 0
+                    Status: 0
+                    CustomFieldsDefinition:
+                    - ID: c0adddda-12c1-4109-b7db-9a997f70c81f
+                      Name: Some Name
+                      Context: Some Context
+                      IsRequired: false
+                      Type: 0
+                    - ID: da5bdc1c-08b2-4b3e-b44b-d56ede6d1a31
+                      Name: Some Name
+                      Context: Some Context
+                      IsRequired: false
+                      Type: 0
+                    CreatedBy: Some CreatedBy
+                    CreatedOn: /Date(1400765707432)/
+                    UpdatedBy: Some UpdatedBy
+                    UpdatedOn: /Date(1400765707432)/
+                    ImportOperation:
+                      ID: 0
+                      DataHash: 7ec702c2-0481-45cc-bf92-72bb4912c60d
+                      Mappings: Some Mappings
+                      EmailNotify: Some EmailNotify
+                      CreatedOn: /Date(1400765707432)/
+                      StartedOn: /Date(1400765707432)/
+                      CompletedOn: /Date(1400765707432)/
+                      TotalInserted: 0
+                      TotalUpdated: 0
+                      TotalUnsubscribed: 0
+                      TotalInvalid: 0
+                      TotalDuplicate: 0
+                      TotalMembers: 0
+                      Message: Some Message
+                      Success: false
+      security:
+      - apikeyQuery: []
+  /lists/{Page}/{PageSize}.{Format}:
+    get:
+      operationId: gettingAllActiveMailingListsWithPaging
+      summary: Getting all active mailing lists with paging
+      description: Gets a list of your active mailing lists in your account. Because the results for this call could be quite
+        big, paging information is required as input.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: Page
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '1'
+      - name: PageSize
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '20'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: ShortBy
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The name of the campaign property to sort results by. If not specified, results will be sorted by the
+          CreatedOn property
+      - name: SortMethod
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'The method to sort results: ASC for ascending, DESC for descending. If not specified, `ASC` will be
+          assumed'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following information for the requested mailing list:'
+                  Paging:
+                    description: 'A list with all the following paging information:'
+                  MailingLists:
+                    description: 'A list with mailing lists. Contains the following information for each list:'
+                  CreatedBy:
+                    description: The ip from where the requested mailing list was created
+                  CreatedOn:
+                    description: The date time that the requested mailing list was created
+                  UpdatedBy:
+                    description: The ip from where the requested mailing list was updated
+                  UpdatedOn:
+                    description: The date time that the requested mailing list was updated
+                  ImportOperation:
+                    description: The details of the latest import operation that was performed for the requested mailing list.
+                      Will be blank if no import operation was performed for this list.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 20
+                    CurrentPage: 1
+                    TotalResults: 92
+                    TotalPageCount: 5
+                    SortExpression: null
+                    SortIsAscending: false
+                  MailingLists:
+                  - ID: 04fad8e2-2b35-4302-a887-58f14a1152ab
+                    Name: Your List Name
+                    ActiveMemberCount: 1024
+                    BouncedMemberCount: 16
+                    RemovedMemberCount: 32
+                    UnsubscribedMemberCount: 24
+                    Status: 0
+                    CustomFieldsDefinition:
+                    - ID: dd4fb545-ba00-4afe-bc39-5ed2462fd1d3
+                      Name: City
+                      Context: null
+                      IsRequired: false
+                      Type: 0
+                    - ID: ae8500d7-d1df-4118-9a2c-6654a7d6a6db
+                      Name: Age
+                      Context: null
+                      IsRequired: true
+                      Type: 1
+                    CreatedBy: 127.0.0.1
+                    CreatedOn: /Date(1368710504000+0300)/
+                    UpdatedBy: 127.0.0.1
+                    UpdatedOn: /Date(1368710923000+0300)/
+                    ImportOperation:
+                      ID: 0
+                      DataHash: 97de8bcb-ca1c-4a4b-bf02-3f639952e093
+                      Mappings: Some Mappings
+                      EmailNotify: Some EmailNotify
+                      CreatedOn: /Date(1400765707431)/
+                      StartedOn: /Date(1400765707431)/
+                      CompletedOn: /Date(1400765707432)/
+                      TotalInserted: 0
+                      TotalUpdated: 0
+                      TotalUnsubscribed: 0
+                      TotalInvalid: 0
+                      TotalDuplicate: 0
+                      TotalMembers: 0
+                      Message: Some Message
+                      Success: false
+                  - ID: 4d90a60c-fad2-4f29-b541-318f0ea82be6
+                    Name: Some Name
+                    ActiveMemberCount: 0
+                    BouncedMemberCount: 0
+                    RemovedMemberCount: 0
+                    UnsubscribedMemberCount: 0
+                    Status: 0
+                    CustomFieldsDefinition: []
+                    CreatedBy: 192.168.1.1
+                    CreatedOn: /Date(1400765707432)/
+                    UpdatedBy: 192.168.1.1
+                    UpdatedOn: /Date(1400765707432)/
+                    ImportOperation:
+                      ID: 0
+                      DataHash: 7ec702c2-0481-45cc-bf92-72bb4912c60d
+                      Mappings: Some Mappings
+                      EmailNotify: Some EmailNotify
+                      CreatedOn: /Date(1400765707432)/
+                      StartedOn: /Date(1400765707432)/
+                      CompletedOn: /Date(1400765707432)/
+                      TotalInserted: 0
+                      TotalUpdated: 0
+                      TotalUnsubscribed: 0
+                      TotalInvalid: 0
+                      TotalDuplicate: 0
+                      TotalMembers: 0
+                      Message: Some Message
+                      Success: false
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/details.{Format}:
+    get:
+      operationId: gettingMailingListDetails
+      summary: Getting mailing list details
+      description: Gets details for a given mailing list. You may include subscriber statistics in your results or not. Any
+        segments existing for the requested mailing list will not be included in the results.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: WithStatistics
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following information for the requested mailing list:'
+                  ID:
+                    description: The id of the requested mailing list.
+                  Name:
+                    description: The name of the requested mailing list.
+                  ActiveMemberCount:
+                    description: The number of the active members for the requested mailing list.
+                  BouncedMemberCount:
+                    description: The number of the bounced emails for the requested mailing list.
+                  RemovedMemberCount:
+                    description: The number of the removed emails for the requested mailing list.
+                  UnsubscribedMemberCount:
+                    description: The number of the unsubscribed emails for the requested mailing list.
+                  Status:
+                    description: The status of the requested mailing list.
+                  CustomFieldsDefinition:
+                    description: The details of each custom field for the requested mailing list. This will be blank if there
+                      are no custom fields for this mailing list.
+                  CreatedBy:
+                    description: The ip from where the requested mailing list was created.
+                  CreatedOn:
+                    description: The date time that the requested mailing list was created.
+                  UpdatedBy:
+                    description: The ip from where the requested mailing list was updated.
+                  UpdatedOn:
+                    description: The date time that the requested mailing list was updated.
+                  ImportOperation:
+                    description: The details of the latest import operation that was performed in the requested mailing list.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 28132257-f655-49a4-8af7-6fbf31645641
+                  Name: test auto
+                  ActiveMemberCount: 19999
+                  BouncedMemberCount: 0
+                  RemovedMemberCount: 0
+                  UnsubscribedMemberCount: 0
+                  Status: 1
+                  CustomFieldsDefinition:
+                  - ID: c3226cc-8a18-4f22-907b-8422d61a53a1
+                    Name: Gender
+                    Context: <items><item><name>Male</name><value>Male</value></item><item><name>Female</name><value>Female</value></item></items>
+                    IsRequired: true
+                    Type: 3
+                  - ID: bf14b37c-3c47-412d-baf1-c6850b8cf2af
+                    Name: Town
+                    Context: null
+                    IsRequired: false
+                    Type: 0
+                  CreatedBy: 223.16.165.23
+                  CreatedOn: /Date(1443174387327+0100)/
+                  UpdatedBy: 223.16.165.23
+                  UpdatedOn: /Date(1443174387327+0100)/
+                  ImportOperation:
+                    ID: 3706
+                    DataHash: 2490c26c-79f6-a52c-4afb-852f624a91b0
+                    Mappings: Email
+                    EmailNotify: null
+                    CreatedOn: /Date(1443181931130+0100)/
+                    StartedOn: /Date(1443181958330+0100)/
+                    CompletedOn: /Date(1443182730673+0100)/
+                    TotalInserted: 19999
+                    TotalUpdated: 0
+                    TotalUnsubscribed: 1
+                    TotalInvalid: 0
+                    TotalIgnored: 0
+                    TotalDuplicate: 0
+                    TotalMembers: 20000
+                    Message: null
+                    Success: true
+                    SkipNewMembers: false
+      security:
+      - apikeyQuery: []
+  /lists/create.{Format}:
+    post:
+      operationId: creatingAMailingList
+      summary: Creating a mailing list
+      description: Creates a new empty mailing list in your account.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the new mailing list. ***(Required)***
+                ConfirmationPage:
+                  type: string
+                  description: The URL of the page that will be displayed at the end of the subscription process. ***(Optional)***
+                RedirectAfterUnsubscribePage:
+                  type: string
+                  description: The URL of the page that users will be redirected after unsubscribing from your mailing list.
+                    ***(Optional)***
+            example:
+              Name: New List
+              ConfirmationPage: www.someUrl.com
+              RedirectAfterUnsubscribePage: www.someUrl.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The unique id for the mailing list created.
+              example:
+                Code: 0
+                Error: null
+                Context: 6ca52d31-765c-4760-a78e-91e511e49d76
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/update.{Format}:
+    post:
+      operationId: updatingAMailingList
+      summary: Updating a mailing list
+      description: Updates the properties of an existing mailing list.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        description: The ID of the mailing list to be updated.
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the updated mailing list. ***(Required)***
+                ConfirmationPage:
+                  type: string
+                  description: The URL of the page that will be displayed at the end of the subscription process. ***(Optional)***
+                RedirectAfterUnsubscribePage:
+                  type: string
+                  description: The URL of the page that users will be redirected after unsubscribing from your mailing list.
+                    ***(Optional)***
+            example:
+              Name: New List Name
+              ConfirmationPage: www.someotherUrl.com
+              RedirectAfterUnsubscribePage: www.someotherUrl.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The unique id for the updated mailing list.
+              example:
+                Code: 0
+                Error: null
+                Context: e5f6c0a3-1fe6-4d89-951e-eafae0b01368
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/delete.{Format}:
+    delete:
+      operationId: deletingAMailingList
+      summary: Deleting a mailing list
+      description: Deletes a mailing list from your account.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: b9c67cb4-a821-4187-930d-79d81a3067df
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: Context will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/customfields/create.{Format}:
+    post:
+      operationId: creatingACustomField
+      summary: Creating a custom field
+      description: Creates a new custom field in the specified mailing list.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the custom field. ***(Required)***
+                CustomFieldType:
+                  type: string
+                  description: Specifies the data type of the custom field. This must be one of the following values. ***(Optional)***
+                    <br/> If omitted, Text will be assumed.
+                Options:
+                  type: string
+                  description: If you want to create a custom field of type SingleSelectDropdown, you must set this parameter
+                    to specify the available options for the user to choose from. Use a comma (,) to separate different options.
+                    ***(Optional)***
+                IsRequired:
+                  type: string
+                  description: Specify whether this field will be mandatory on not, when a subscriber is added to your list
+                    by any means. You should specify a value of either true or false. If omitted, false will be assumed. ***(Optional)***
+                IsHidden:
+                  type: string
+                  description: Specify whether this field will be visible by your subscribers on not, in their update profile
+                    page. If omitted, false will be assumed. ***(Optional)***
+            example:
+              Name: Town
+              CustomFieldType: SingleSelectDropdown
+              Options: Athens,London,New York
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The unique id for the new custom field.
+              example:
+                Code: 0
+                Error: null
+                Context: b42b4e0f-ca2f-403d-8231-32a2405651af
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/customfields/{CustomFieldID}/update.{Format}:
+    post:
+      operationId: updatingACustomField
+      summary: Updating a custom field
+      description: Updates the properties of an existing custom field in the specified mailing list.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: CustomFieldID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: b42b4e0f-ca2f-403d-8231-32a2405651af
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the custom field. ***(Required)***
+                CustomFieldType:
+                  type: string
+                  description: Specifies the data type of the custom field. This must be one of the following values.  ***(Optional)***<br/>
+                    If omitted, Text will be assumed.
+                Options:
+                  type: string
+                  description: If you want to create a custom field of type SingleSelectDropdown, you must set this parameter
+                    to specify the available options for the user to choose from. Use a comma (,) to separate different options.
+                    ***(Optional)***
+                IsRequired:
+                  type: string
+                  description: Specify whether this field will be mandatory on not, when a subscriber is added to your list
+                    by any means. You should specify a value of either true or false. If omitted, false will be assumed. ***(Optional)***
+                IsHidden:
+                  type: string
+                  description: Specify whether this field will be visible by your subscribers on not, in their update profile
+                    page. If omitted, false will be assumed. ***(Optional)***
+            example:
+              Name: City
+              CustomFieldType: SingleSelectDropdown
+              Options: Frankfurt,London,Paris,Rome
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The unique id for the updated custom field.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/customfields/{CustomFieldID}/delete.{Format}:
+    delete:
+      operationId: removingACustomField
+      summary: Removing a custom field
+      description: Removes a custom field definition from the specified mailing list.
+      tags:
+      - Mailing Lists
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: CustomFieldID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: b42b4e0f-ca2f-403d-8231-32a2405651af
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: Context will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/subscribers/{Status}.{Format}:
+    get:
+      operationId: gettingSubscribers
+      summary: Getting subscribers
+      description: Gets a list of all subscribers in a given mailing list. You may filter the list by setting a date to fetch
+        those subscribed since then and/or by their status. Because the results for this call could be quite big, paging information
+        is required as input.
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Status
+        in: path
+        required: true
+        schema:
+          type: string
+        example: Subscribed
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: Page
+        in: query
+        required: false
+        schema:
+          type: number
+      - name: PageSize
+        in: query
+        required: false
+        schema:
+          type: number
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'The response context. This contains all the following information for the subscribers of
+                      requested mailing list:'
+                  Paging:
+                    description: A list with all the following paging information.
+                  Subscribers:
+                    description: 'A list with all the subscribers for the requested mailing list, with all the following information:'
+                  CustomFields:
+                    description: A list with all the custom fields for the requested mailing list.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 500
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: CreatedOn
+                    SortIsAscending: false
+                  Subscribers:
+                  - ID: 4d03536e-7263-4a45-add0-8fe9568d7481
+                    Name: Maria
+                    Email: maria@email.com
+                    CreatedOn: /Date(1456236266953+0000)/
+                    UpdatedOn: /Date(1465286948363+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 2
+                    CustomFields:
+                    - CustomFieldID: dbc599a6-3ac0-4843-830c-31fa78699fcc
+                      Name: ID
+                      Value: '1233'
+                    - CustomFieldID: bfe484f1-030f-4f8d-bdfa-93abc3b227c0
+                      Name: City
+                      Value: Athens
+                    RemovedOn: null
+                  - ID: 83485f6c-569c-4012-ab2e-f91d3f888995
+                    Name: Andreas
+                    Email: andreas@moosend.com
+                    CreatedOn: /Date(1454421397847+0000)/
+                    UpdatedOn: /Date(1465286972657+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 2
+                    CustomFields:
+                    - CustomFieldID: dbc599a6-3ac0-4843-830c-31fa78699fcc
+                      Name: ID
+                      Value: '1333'
+                    - CustomFieldID: bfe484f1-030f-4f8d-bdfa-93abc3b227c0
+                      Name: City
+                      Value: Liverpool
+                    RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/view.{Format}:
+    get:
+      operationId: getSubscriberByEmailAddress
+      summary: Get subscriber by email address
+      description: Searches for a subscriber with the specified email address in the specified mailing list and returns detailed
+        information such as id, name, date created, date unsubscribed, status and custom fields
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: Email
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'The response context. Contains all the following information for the requested subscriber:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 9bef1735-f04d-4472-b029-68eb7fa2cfe7
+                  Name: Andreas
+                  Email: andreas@moosend.com
+                  CreatedOn: /Date(1461777152597+0100)/
+                  UpdatedOn: /Date(1461777152597+0100)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 1
+                  SubscribeMethod: 2
+                  CustomFields:
+                  - CustomFieldID: b7e68e81-b6ab-4caa-8d13-e65871b32386
+                    Name: Registered
+                    Value: 4/21/2016 12:00:00 AM
+                  - CustomFieldID: 9df6dcc4-bef2-47e7-93af-86889b6b6d6a
+                    Name: Age
+                    Value: '24'
+                  - CustomFieldID: 0d2199aa-65fc-448c-b9fe-199e3b72ebc5
+                    Name: Some custom field
+                    Value: Something
+                  - CustomFieldID: 46721a6b-09aa-46ff-bab1-a0b75dea24cf
+                    Name: Some custom field
+                    Value: Text1
+                  RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/find/{SubscriberID}.{Format}:
+    get:
+      operationId: getSubscriberById
+      summary: Get subscriber by id
+      description: Searches for a subscriber with the specified unique id in the specified mailing list and returns detailed
+        information such as email, name, date created, date unsubscribed, status and custom fields.
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SubscriberID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 118e41dc-bb9e-435d-a86a-e5bd374668a8
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'The response context. Contains all the following information for the requested subscriber:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 118e41dc-bb9e-435d-a86a-e5bd374668a8
+                  Name: Some name
+                  Email: getmoocampaigns+1@gmail.com
+                  CreatedOn: /Date(1464952683773+0100)/
+                  UpdatedOn: /Date(1465380328390+0100)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 4
+                  SubscribeMethod: 2
+                  CustomFields: []
+                  RemovedOn: /Date(1465381597743+0100)/
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/subscribe.{Format}:
+    post:
+      operationId: addingSubscribers
+      summary: Adding subscribers
+      description: Adds a new subscriber to the specified mailing list. If there is already a subscriber with the specified
+        email address in the list, an update will be performed instead. The rate limit for this request is 10 requests per
+        10 seconds (*per API key).
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the member. ***(Optional)***
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+                HasExternalDoubleOptIn:
+                  type: string
+                  description: When true, flags the added member as having given their subscription consent by other means.
+                    ***(Optional)***
+                CustomFields:
+                  type: string
+                  description: A list of name-value pairs that match the member's custom fields defined in the mailing list.
+                    ***(Optional)***
+            example:
+              Name: Paul
+              Email: someEmail@email.com
+              HasExternalDoubleOptIn: false
+              CustomFields:
+              - Age=25
+              - Country=USA
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'The response context. Contains all the following information for the requested subscriber:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: f582c388-7916-4890-a9ab-b592615ef095
+                  Name: Paul
+                  Email: someemail@email.com
+                  CreatedOn: /Date(1465379934028)/
+                  UpdatedOn: /Date(1465379934028)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 1
+                  SubscribeMethod: 2
+                  CustomFields:
+                  - CustomFieldID: 728f6774-37ea-4d81-8607-ce8308136760
+                    Name: Age
+                    Value: '25'
+                  - CustomFieldID: b6380e04-c3a6-425b-9931-d25897fa4752
+                    Name: Country
+                    Value: USA
+                  RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/subscribe_many.{Format}:
+    post:
+      operationId: addingMultipleSubscribers
+      summary: Adding multiple subscribers
+      description: This method allows you to add multiple subscribers in a mailing list with a single call. If some subscribers
+        already exist with the given email addresses, they will be updated. If you try to add a subscriber with an invalid
+        email address, this attempt will be ignored, as the process will skip to the next subscriber automatically. The rate
+        limit for this request is 2 requests per 10 seconds (*per API key).
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                HasExternalDoubleOptIn:
+                  type: string
+                  description: When true, flags the added members as having given their subscription consent by other means.
+                    ***(Optional)***
+                Subscribers:
+                  type: string
+                  description: A list of up to 1000 subscribers to add to the mailing list. You may specify the email address,
+                    the name and the custom fields for each subscriber. ***(Required)***
+            example:
+              HasExternalDoubleOptIn: false
+              Subscribers:
+              - Name: test1Email
+                Email: test1@test.com
+                CustomFields:
+                - Country=UK
+              - Name: test2133Email
+                Email: test2133@test.com
+                CustomFields:
+                - Age=25
+                - Country=USA
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message will show how many and which emails are invalid. It will be null
+                      if all emails are valid.
+                  Context:
+                    description: 'A list with response contexts. Each context contains all the following information for each
+                      subscriber:'
+              example:
+                Code: 0
+                Error: '2 items with invalid email address were ignored: email@email, email2@email'
+                Context:
+                - ID: ca506fc5-0967-4756-8848-74e9766bdbdd
+                  Name: test1Email
+                  Email: test1@test.com
+                  CreatedOn: /Date(1465377493907+0100)/
+                  UpdatedOn: /Date(1465381164389)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 1
+                  SubscribeMethod: 1
+                  CustomFields:
+                  - CustomFieldID: 42acf2cf-1096-4c80-960b-051791d9a276
+                    Name: Country
+                    Value: UK
+                  RemovedOn: null
+                - ID: b751f349-f6b3-4b14-8d75-c37dfafbe40a
+                  Name: test2133Email
+                  Email: test2133@test.com
+                  CreatedOn: /Date(1465377493907+0100)/
+                  UpdatedOn: /Date(1465381164389)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 1
+                  SubscribeMethod: 1
+                  CustomFields:
+                  - CustomFieldID: 60d4e2b0-e5ae-4737-9ac5-ce071ab346fb
+                    Name: Age
+                    Value: 25
+                  - CustomFieldID: 42acf2cf-1096-4c80-960b-051791d9a276
+                    Name: Country
+                    Value: USA
+                  RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/update/{SubscriberID}.{Format}:
+    post:
+      operationId: updatingASubscriber
+      summary: Updating a subscriber
+      description: Updates a subscriber in the specified mailing list.
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SubscriberID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: 118e41dc-bb9e-435d-a86a-e5bd374668a8
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the member. ***(Optional)***
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+                HasExternalDoubleOptIn:
+                  type: string
+                  description: When true, flags the added member as having given their subscription consent by other means.
+                    ***(Optional)***
+                CustomFields:
+                  type: string
+                  description: A list of name-value pairs that match the member's custom fields defined in the mailing list.
+                    ***(Optional)***
+            example:
+              Name: Some Name
+              HasExternalDoubleOptIn: false
+              Email: someEmail@email.com
+              CustomFields:
+              - Age=25
+              - Country=USA
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'The response context. Contains all the following information for the requested subscriber:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: d75fca65-a2bc-4474-bd4d-307f9cf63a57
+                  Name: Some name
+                  Email: someEmail@email.com
+                  CreatedOn: /Date(1465380655880+0100)/
+                  UpdatedOn: /Date(1465388373874)/
+                  UnsubscribedOn: null
+                  UnsubscribedFromID: null
+                  SubscribeType: 1
+                  SubscribeMethod: 2
+                  CustomFields:
+                  - CustomFieldID: b9a6cb39-ec8f-4e5e-a41a-b64b9b3fc190
+                    Name: Age
+                    Value: 25
+                  - CustomFieldID: 1c4ff8dc-48e3-4af1-ae4f-2b1b81a44d17
+                    Name: Country
+                    Value: USA
+                  RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /subscribers/unsubscribe.{Format}:
+    post:
+      operationId: unsubscribingSubscribersFromAccount
+      summary: Unsubscribing subscribers from account
+      description: Unsubscribes a subscriber from the account. The rate limit for this request is 20 requests per 10 seconds
+        (*per API key).
+      tags:
+      - Subscribers
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+            example:
+              Email: test1@test.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/unsubscribe.{Format}:
+    post:
+      operationId: unsubscribingSubscribersFromMailingList
+      summary: Unsubscribing subscribers from mailing list
+      description: Unsubscribes a subscriber from the specified mailing list. The rate limit for this request is 20 requests
+        per 10 seconds (*per API key).
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+            example:
+              Email: test1@test.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/{CampaignID}/unsubscribe.{Format}:
+    post:
+      operationId: unsubscribingSubscribersFromMailingListAndASpecifiedCampaign
+      summary: Unsubscribing subscribers from mailing list and a specified campaign
+      description: Unsubscribes a subscriber from the specified mailing list and the specified campaign. This call will take
+        into account the setting you have in "unsubscribe settings" and will remove the subscriber from all other mailing
+        lists or not accordingly. The rate limit for this request is 20 requests per 10 seconds (*per API key).
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: cbcb297d-52a8-4bed-ae85-640c37c92771
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+            example:
+              Email: test1@test.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/remove.{Format}:
+    post:
+      operationId: removingASubscriber
+      summary: Removing a subscriber
+      description: Removes a subscriber from the specified mailing list permanently (without moving to the suppression list).
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Email:
+                  type: string
+                  description: The email address of the member. ***(Required)***
+            example:
+              Email: test1@test.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /subscribers/{MailingListID}/remove_many.{Format}:
+    post:
+      operationId: removingMultipleSubscribers
+      summary: Removing multiple subscribers
+      description: Removes a list of subscribers from the specified mailing list permanently (without putting them in the
+        suppression list). Any invalid email addresses specified will be ignored.
+      tags:
+      - Subscribers
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+            example:
+              Emails: someEmail@email.com,someEmail2@email.com,someEmail3@email.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: 'The response context for this call. This contains the following:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  EmailsIgnored: 0
+                  EmailsProcessed: 3
+      security:
+      - apikeyQuery: []
+  /campaigns.{Format}:
+    get:
+      operationId: getAllCampaigns
+      summary: Get All Campaigns
+      description: Returns a list of all campaigns in your account with detailed information. Because the results for this
+        call could be quite big, paging information is required as input.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the following information for the new campaign :'
+                  ID:
+                    description: The id of the cloned campaign.
+                  Name:
+                    description: The name of the campaign.
+                  Subject:
+                    description: The subject of the campaign.
+                  SiteName:
+                    description: The site name of the account.
+                  ConfirmationTo:
+                    description: The email address to which a confirmation message will be sent when the campaign has been
+                      successfully sent.
+                  CreatedOn:
+                    description: Specifies when the campaign was created.
+                  ABHoursToTest:
+                    description: Specifies the total number of hours to test version A and B of your campaign before sending
+                      the winning version. Will be null if the given campaign is not an A/B split test campaign.
+                  ABCampaignType:
+                    description: 'Specifies the type of the A/B split campaign test. It can be one of the following:'
+                  ABWinner:
+                    description: Specifies if the winning campaign is A or B. Will be null if the given campaign is not an
+                      A/B split test campaign.
+                  ABWinnerSelectionType:
+                    description: 'Specifies the method to determine the winning version for the test. Will be null if the
+                      given campaign is not an A/B split test campaign, or one of the following if it is :'
+                  Status:
+                    description: 'The status of the campaign. Will be one of the following:'
+                  DeliveredOn:
+                    description: The date time that the campaign was delivered.
+                  ScheduleFor:
+                    description: The date time that the campaign is scheduled to be delivered.
+                  MailingLists:
+                    description: A list that contains the mailing lists selected for this campaign to be sent to.
+                  TotalSent:
+                    description: The number of the total emails sent.
+                  TotalOpens:
+                    description: The number of the total emails opened.
+                  UniqueOpens:
+                    description: The number of the total unique emails opened.
+                  TotalBounces:
+                    description: The number of the total bounce
+                  TotalForwards:
+                    description: The number of the total forwarded emails. This will count emails forwarded by the "Forward
+                      to a friend" personalization tag.
+                  UniqueForwards:
+                    description: The number of the total unique forwarded emails. This will count emails forwarded by the
+                      "Forward to a friend" personalization tag.
+                  TotalLinkClicks:
+                    description: The number of the total link clicks.
+                  UniqueLinkClicks:
+                    description: The number of the total unique link clicks.
+                  RecipientsCount:
+                    description: The number of the total recipients.
+                  IsTransactional:
+                    description: This value will be false for this case.
+                  TotalComplaints:
+                    description: The number of the total complaints.
+                  TotalUnsubscribes:
+                    description: The number of the total unsubscribed emails.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 10
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: true
+                  Campaigns:
+                  - ID: cbcb297d-52a8-4bed-ae85-640c37c92771
+                    Name: Test Release 1
+                    Subject: Test Release 1
+                    SiteName: mysite
+                    ConfirmationTo: andreas@moosend.com
+                    CreatedOn: /Date(1464952661697+0100)/
+                    ABHoursToTest: null
+                    ABCampaignType: null
+                    ABWinner: null
+                    ABWinnerSelectionType: null
+                    Status: 3
+                    DeliveredOn: /Date(1464952817450+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: dce99b7a-2619-4805-aaeb-7fecdcb3c71b
+                        Name: SomeName
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 212.205.224.198
+                        CreatedOn: /Date(1464952667680+0100)/
+                        UpdatedBy: 212.205.224.198
+                        UpdatedOn: /Date(1464952667680+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 1
+                    TotalOpens: 1
+                    UniqueOpens: 1
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 1
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+                  - ID: ef2ab040-aec8-46bf-be54-3d8311093015
+                    Name: Performance Testing
+                    Subject: Performance Testing
+                    SiteName: mysite
+                    ConfirmationTo: info@northweb.biz
+                    CreatedOn: /Date(1464647633330+0100)/
+                    ABHoursToTest: 3
+                    ABCampaignType: 2
+                    ABWinner: 0
+                    ABWinnerSelectionType: 1
+                    Status: 3
+                    DeliveredOn: /Date(1464647633207+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: 9b7611be-d395-4677-9983-697d261cca91
+                        Name: Performance Testing
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 127.0.0.1
+                        CreatedOn: /Date(1464647633220+0100)/
+                        UpdatedBy: 127.0.0.1
+                        UpdatedOn: /Date(1464647633220+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 0
+                    TotalOpens: 0
+                    UniqueOpens: 0
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 18561
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+      security:
+      - apikeyQuery: []
+  /campaigns/{Page}.{Format}:
+    get:
+      operationId: getCampaignsByPage
+      summary: Get Campaigns By Page
+      description: Returns a list of all campaigns in your account with detailed information. Because the results for this
+        call could be quite big, paging information is required as input.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Page
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '1'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the following information for the new campaign:'
+                  ID:
+                    description: The id of the cloned campaign.
+                  Name:
+                    description: The name of the campaign.
+                  Subject:
+                    description: The subject of the campaign.
+                  SiteName:
+                    description: The site name of the account.
+                  ConfirmationTo:
+                    description: The email address to which a confirmation message will be sent when the campaign has been
+                      successfully sent.
+                  CreatedOn:
+                    description: Specifies when the campaign was created.
+                  ABHoursToTest:
+                    description: Specifies the total number of hours to test version A and B of your campaign before sending
+                      the winning version. Will be null if the given campaign is not an A/B split test campaign.
+                  ABCampaignType:
+                    description: 'Specifies the type of the A/B split campaign test. It can be one of the following:'
+                  ABWinner:
+                    description: Specifies if the winning campaign is A or B. Will be null if the given campaign is not an
+                      A/B split test campaign.
+                  ABWinnerSelectionType:
+                    description: 'Specifies the method to determine the winning version for the test. Will be null if the
+                      given campaign is not an A/B split test campaign, or one of the following if it is :'
+                  Status:
+                    description: 'The status of the campaign. Will be one of the following:'
+                  DeliveredOn:
+                    description: The date time that the campaign was delivered.
+                  ScheduleFor:
+                    description: The date time that the campaign is scheduled to be delivered.
+                  MailingLists:
+                    description: A list that contains the mailing lists selected for this campaign to be sent to.
+                  TotalSent:
+                    description: The number of the total emails sent.
+                  TotalOpens:
+                    description: The number of the total emails opened.
+                  UniqueOpens:
+                    description: The number of the total unique emails opened.
+                  TotalBounces:
+                    description: The number of the total bounce
+                  TotalForwards:
+                    description: The number of the total forwarded emails. This will count emails forwarded by the "Forward
+                      to a friend" personalization tag.
+                  UniqueForwards:
+                    description: The number of the total unique forwarded emails. This will count emails forwarded by the
+                      "Forward to a friend" personalization tag.
+                  TotalLinkClicks:
+                    description: The number of the total link clicks.
+                  UniqueLinkClicks:
+                    description: The number of the total unique link clicks.
+                  RecipientsCount:
+                    description: The number of the total recipients.
+                  IsTransactional:
+                    description: This value will be false for this case.
+                  TotalComplaints:
+                    description: The number of the total complaints.
+                  TotalUnsubscribes:
+                    description: The number of the total unsubscribed emails.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 10
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: true
+                  Campaigns:
+                  - ID: cbcb297d-52a8-4bed-ae85-640c37c92771
+                    Name: Test Release 1
+                    Subject: Test Release 1
+                    SiteName: mysite
+                    ConfirmationTo: andreas@moosend.com
+                    CreatedOn: /Date(1464952661697+0100)/
+                    ABHoursToTest: null
+                    ABCampaignType: null
+                    ABWinner: null
+                    ABWinnerSelectionType: null
+                    Status: 3
+                    DeliveredOn: /Date(1464952817450+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: dce99b7a-2619-4805-aaeb-7fecdcb3c71b
+                        Name: Some Name
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 212.205.224.198
+                        CreatedOn: /Date(1464952667680+0100)/
+                        UpdatedBy: 212.205.224.198
+                        UpdatedOn: /Date(1464952667680+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 1
+                    TotalOpens: 1
+                    UniqueOpens: 1
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 1
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+                  - ID: ef2ab040-aec8-46bf-be54-3d8311093015
+                    Name: Performance Testing
+                    Subject: Performance Testing
+                    SiteName: mysite
+                    ConfirmationTo: info@northweb.biz
+                    CreatedOn: /Date(1464647633330+0100)/
+                    ABHoursToTest: null
+                    ABCampaignType: null
+                    ABWinner: null
+                    ABWinnerSelectionType: null
+                    Status: 3
+                    DeliveredOn: /Date(1464647633207+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: 9b7611be-d395-4677-9983-697d261cca91
+                        Name: Performance Testing
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 127.0.0.1
+                        CreatedOn: /Date(1464647633220+0100)/
+                        UpdatedBy: 127.0.0.1
+                        UpdatedOn: /Date(1464647633220+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 0
+                    TotalOpens: 0
+                    UniqueOpens: 0
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 18561
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+      security:
+      - apikeyQuery: []
+  /campaigns/{Page}/{PageSize}.{Format}:
+    get:
+      operationId: getCampaignsByPageAndPagesize
+      summary: Get Campaigns By Page And Pagesize
+      description: Returns a list of all campaigns in your account with detailed information. Because the results for this
+        call could be quite big, paging information is required as input.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Page
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '1'
+      - name: PageSize
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '5'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: SortBy
+        in: query
+        required: false
+        schema:
+          type: string
+        description: The name of the campaign property to sort results by. If not specified, results will be sorted by the
+          CreatedOn property
+      - name: SortMethod
+        in: query
+        required: false
+        schema:
+          type: string
+        description: 'The method to sort results: ASC for ascending, DESC for descending. If not specified, `ASC` will be
+          assumed'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the following information for the new campaign :'
+                  ID:
+                    description: The id of the cloned campaign.
+                  Name:
+                    description: The name of the campaign.
+                  Subject:
+                    description: The subject of the campaign.
+                  SiteName:
+                    description: The site name of the account.
+                  ConfirmationTo:
+                    description: The email address to which a confirmation message will be sent when the campaign has been
+                      successfully sent.
+                  CreatedOn:
+                    description: Specifies when the campaign was created.
+                  ABHoursToTest:
+                    description: Specifies the total number of hours to test version A and B of your campaign before sending
+                      the winning version. Will be null if the given campaign is not an A/B split test campaign.
+                  ABCampaignType:
+                    description: 'Specifies the type of the A/B split campaign test. It can be one of the following:'
+                  ABWinner:
+                    description: Specifies if the winning campaign is A or B. Will be null if the given campaign is not an
+                      A/B split test campaign.
+                  ABWinnerSelectionType:
+                    description: 'Specifies the method to determine the winning version for the test. Will be null if the
+                      given campaign is not an A/B split test campaign, or one of the following if it is :'
+                  Status:
+                    description: 'The status of the campaign. Will be one of the following:'
+                  DeliveredOn:
+                    description: The date time that the campaign was delivered.
+                  ScheduleFor:
+                    description: The date time that the campaign is scheduled to be delivered.
+                  MailingLists:
+                    description: A list that contains the mailing lists selected for this campaign to be sent to.
+                  TotalSent:
+                    description: The number of the total emails sent.
+                  TotalOpens:
+                    description: The number of the total emails opened.
+                  UniqueOpens:
+                    description: The number of the total unique emails opened.
+                  TotalBounces:
+                    description: The number of the total bounce
+                  TotalForwards:
+                    description: The number of the total forwarded emails. This will count emails forwarded by the "Forward
+                      to a friend" personalization tag.
+                  UniqueForwards:
+                    description: The number of the total unique forwarded emails. This will count emails forwarded by the
+                      "Forward to a friend" personalization tag.
+                  TotalLinkClicks:
+                    description: The number of the total link clicks.
+                  UniqueLinkClicks:
+                    description: The number of the total unique link clicks.
+                  RecipientsCount:
+                    description: The number of the total recipients.
+                  IsTransactional:
+                    description: This value will be false for this case.
+                  TotalComplaints:
+                    description: The number of the total complaints.
+                  TotalUnsubscribes:
+                    description: The number of the total unsubscribed emails.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 5
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: true
+                  Campaigns:
+                  - ID: cbcb297d-52a8-4bed-ae85-640c37c92771
+                    Name: Test Release 1
+                    Subject: Test Release 1
+                    SiteName: mysite
+                    ConfirmationTo: andreas@moosend.com
+                    CreatedOn: /Date(1464952661697+0100)/
+                    ABHoursToTest: null
+                    ABCampaignType: null
+                    ABWinner: null
+                    ABWinnerSelectionType: null
+                    Status: 3
+                    DeliveredOn: /Date(1464952817450+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: dce99b7a-2619-4805-aaeb-7fecdcb3c71b
+                        Name: Some Name
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 212.205.224.198
+                        CreatedOn: /Date(1464952667680+0100)/
+                        UpdatedBy: 212.205.224.198
+                        UpdatedOn: /Date(1464952667680+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 1
+                    TotalOpens: 1
+                    UniqueOpens: 1
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 1
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+                  - ID: ef2ab040-aec8-46bf-be54-3d8311093015
+                    Name: Performance Testing
+                    Subject: Performance Testing
+                    SiteName: mysite
+                    ConfirmationTo: info@northweb.biz
+                    CreatedOn: /Date(1464647633330+0100)/
+                    ABHoursToTest: null
+                    ABCampaignType: null
+                    ABWinner: null
+                    ABWinnerSelectionType: null
+                    Status: 3
+                    DeliveredOn: /Date(1464647633207+0100)/
+                    ScheduledFor: null
+                    ScheduledForTimezone: GTB Standard Time
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: 9b7611be-d395-4637-9983-697d261cca91
+                        Name: Performance Testing
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 127.0.0.1
+                        CreatedOn: /Date(1464647633220+0100)/
+                        UpdatedBy: 127.0.0.1
+                        UpdatedOn: /Date(1464647633220+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    TotalSent: 0
+                    TotalOpens: 0
+                    UniqueOpens: 0
+                    TotalBounces: 0
+                    TotalForwards: 0
+                    UniqueForwards: 0
+                    TotalLinkClicks: 0
+                    UniqueLinkClicks: 0
+                    RecipientsCount: 18561
+                    IsTransactional: false
+                    TotalComplaints: 0
+                    TotalUnsubscribes: 0
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/view.{Format}:
+    get:
+      operationId: gettingCampaignDetails
+      summary: Getting Campaign Details
+      description: Returns a complete set of properties that describe the requested campaign in detail. No statistics are
+        included in the result.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: cbcb297d-52a8-4bed-ae85-640c37c92771
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: This contains all the following information for the new campaign.
+                  ID:
+                    description: The campaign id of the cloned campaign.
+                  Name:
+                    description: The name of the campaign.
+                  Subject:
+                    description: The subject of the campaign.
+                  WebLocation:
+                    description: The web location of your html campaign.
+                  HTMLContent:
+                    description: The html content of the campaign.
+                  PlainContent:
+                    description: The content of the campaign represented as a plain text.
+                  Sender:
+                    description: Contains all the information for the campaign sender.
+                  DeliveredOn:
+                    description: The date time that the campaign is delivered. Will be null in this case for the cloned campaign.
+                  ReplyToEmail:
+                    description: Contains all the information for the reply to email.
+                  CreatedOn:
+                    description: The date time that the campaign was created.
+                  UpdatedOn:
+                    description: The date time that the campaign was updated.
+                  ScheduleFor:
+                    description: The date time that the campaign is scheduled to be delivered. Will be null for cloned campaigns.
+                  TimeZone:
+                    description: The selected timezone for the account.
+                  FormatType:
+                    description: The format type of the campaign. This will be 0 for Html, 1 for Template and 2 for PlainText.
+                  ABCampaignData:
+                    description: This will be null for a regular campaign.
+                  MailingLists:
+                    description: A list that contains the mailing lists selected for this campaign to be sent to.
+                  ConfirmationTo:
+                    description: The confirmation to email.
+                  Status:
+                    description: The status of the campaign. The clone campaign has 0 for status.
+                  IsTransactional:
+                    description: Represents if the campaign was created using Smtp or not. It can be true or false.
+              example: "{\n  \"Code\": 0,\n  \"Error\": null,\n  \"Context\": {\n    \"ID\": \"2fa129d1-a0ab-467a-ab3e-e43fd9f6bfb\"\
+                ,\n    \"Name\": \"Test\",\n    \"Subject\": \"Test\",\n    \"WebLocation\": null,\n    \"HTMLContent\": someHtmlContent,\n\
+                \    \"PlainContent\": somePlainContent,\n    \"Sender\": {\n      \"ID\": \"28a7ee75-034a-44e0-a946-fe28fc229d6e\"\
+                ,\n      \"Name\": \"Fanis\",\n      \"Email\": \"some@memail.com\",\n      \"CreatedOn\": \"/Date(1457684250090+0100)/\"\
+                ,\n      \"IsEnabled\": true,\n      \"SpfVerified\": false,\n      \"DkimVerified\": true,\n      \"DkimPublic\"\
+                : \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmO\"\n    },\n    \"DeliveredOn\": \"/Date(1464339959683+0100)/\"\
+                ,\n    \"ReplyToEmail\": {\n      \"ID\": \"28a7ee75-034a-4110-a9116-fe34235re6e\",\n      \"Name\": \"Fanis\"\
+                ,\n      \"Email\": \"some@email.com\",\n      \"CreatedOn\": \"/Date(1457684250090+0100)/\",\n      \"IsEnabled\"\
+                : true,\n      \"SpfVerified\": false,\n      \"DkimVerified\": true,\n      \"DkimPublic\": \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDmO\"\
+                \n    },\n    \"CreatedOn\": \"/Date(1464339921630+0100)/\",\n    \"UpdatedOn\": \"/Date(1464339949343+0100)/\"\
+                ,\n    \"ScheduledFor\": null,\n    \"Timezone\": \"GTB Standard Time\",\n    \"FormatType\": 0,\n    \"ABCampaignData\"\
+                : null,\n    \"MailingLists\": [\n      {\n        \"MailingListID\": \"ad4b18-3sd0-4e1a-a110-481080fa94\"\
+                ,\n        \"SegmentID\": 0\n      }\n    ],\n    \"ConfirmationTo\": \"some@email.com\",\n    \"Status\"\
+                : 3,\n    \"IsTransactional\": false\n  }\n}"
+      security:
+      - apikeyQuery: []
+  /senders/find_all.{Format}:
+    get:
+      operationId: gettingAllYourSenders
+      summary: Getting All Your Senders
+      description: Gets a list of your active senders in your account. You may specify any email address of these senders
+        when sending a campaign.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the information for the sender email :'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                - ID: 01234567-89ab-cdef-0123-456789abcdef
+                  Name: Your Name
+                  Email: sender@example.com
+                  CreatedOn: /Date(1323857838000+0200)/
+                  IsEnabled: true
+                  SpfVerified: false
+                  DkimVerified: false
+                  DkimPublic: Some DkimPublic
+                - ID: e57c96b7-5786-489b-b3a2-bac3e30dd6bd
+                  Name: Some Name
+                  Email: Some Email
+                  CreatedOn: /Date(1400765125478)/
+                  IsEnabled: false
+                  SpfVerified: false
+                  DkimVerified: false
+                  DkimPublic: Some DkimPublic
+      security:
+      - apikeyQuery: []
+  /senders/find_one.{Format}:
+    get:
+      operationId: gettingSenderDetails
+      summary: Getting Sender Details
+      description: Returns basic information for the specified sender identified by its email address.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: Email
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the information for the sender email :'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 01234567-89ab-cdef-0123-456789abcdef
+                  Name: Your Name
+                  Email: sender@example.com
+                  CreatedOn: /Date(1323857838000+0200)/
+                  IsEnabled: true
+                  SpfVerified: false
+                  DkimVerified: false
+                  DkimPublic: Some DkimPublic
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/clone.{Format}:
+    post:
+      operationId: cloningAnExistingCampaign
+      summary: Cloning An Existing Campaign
+      description: Creates an exact copy of an existing campaign. The new campaign is created as a draft.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: cbcb297d-52a8-4bed-ae85-640c37c92771
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: This contains all the following information for the new campaign.
+                  ID:
+                    description: The campaign id of the cloned campaign.
+                  Name:
+                    description: The name of the campaign.
+                  Subject:
+                    description: The subject of the campaign.
+                  WebLocation:
+                    description: The web location of your html campaign.
+                  HTMLContent:
+                    description: The html content of the campaign.
+                  PlainContent:
+                    description: The content of the campaign represented as a plain text.
+                  Sender:
+                    description: Contains all the information for the campaign sender.
+                  DeliveredOn:
+                    description: The date time that the campaign is delivered. Will be null in this case for the cloned campaign.
+                  ReplyToEmail:
+                    description: Contains all the information for the reply to email.
+                  CreatedOn:
+                    description: The date time that the campaign was created.
+                  UpdatedOn:
+                    description: The date time that the campaign was updated.
+                  ScheduleFor:
+                    description: The date time that the campaign is scheduled to be delivered. Will be null for cloned campaigns.
+                  TimeZone:
+                    description: The selected timezone for the account.
+                  FormatType:
+                    description: The format type of the campaign. This will be 0 for Html, 1 for Template and 2 for PlainText.
+                  ABCampaignData:
+                    description: 'This will be null if the cloned campaign is a regular campaign. If it is an A/B split campaign
+                      it will contain all the following information :'
+                  MailingLists:
+                    description: A list that contains the mailing lists selected for this campaign to be sent to.
+                  ConfirmationTo:
+                    description: The confirmation to email.
+                  Status:
+                    description: The status of the campaign. The clone campaign has 0 for status.
+                  IsTransactional:
+                    description: Represents if the campaign was created using Smtp or not. It can be true or false.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 248f97f5-1e5f-4e17-8fa8-818dc112be10
+                  Name: Test
+                  Subject: Test
+                  WebLocation: http://www.your-domain.com/newsletter
+                  HTMLContent: Some html content
+                  PlainContent: 'Plain context ... '
+                  Sender:
+                    ID: e9d2ed56-fc20-4337-bb6a-8b5884e8dfa6
+                    Name: Test
+                    Email: test@moosend.com
+                    CreatedOn: /Date(1457526079160+0100)/
+                    IsEnabled: true
+                    SpfVerified: false
+                    DkimVerified: true
+                    DkimPublic: sender email dkim public
+                  DeliveredOn: null
+                  ReplyToEmail:
+                    ID: 21234a-cede-1234-1234-1bd8d7a46d2d
+                    Name: Andreas
+                    Email: andreas@moosend.com
+                    CreatedOn: /Date(1457526079160+0100)/
+                    IsEnabled: true
+                    SpfVerified: false
+                    DkimVerified: true
+                    DkimPublic: reply to email dkim public
+                  CreatedOn: /Date(1469541491211)/
+                  UpdatedOn: /Date(1469541491211)/
+                  ScheduledFor: null
+                  Timezone: Korea Standard Time
+                  FormatType: 0
+                  ABCampaignData:
+                    ID: 4080
+                    SubjectB: B Subject
+                    PlainContentB: null
+                    HTMLContentB: null
+                    WebLocationB: null
+                    SenderB: null
+                    HoursToTest: 3
+                    ListPercentage: 19
+                    ABCampaignType: 2
+                    ABWinnerSelectionType: 1
+                    DeliveredOnA: null
+                    DeliveredOnB: null
+                  MailingLists:
+                  - MailingListID: e9d2ed56-fc20-4337-bb6a-8b5884e8dfa6
+                    SegmentID: 0
+                  ConfirmationTo: test@moosend.com
+                  Status: 0
+                  IsTransactional: false
+      security:
+      - apikeyQuery: []
+  /campaigns/create.{Format}:
+    post:
+      operationId: creatingADraftCampaign
+      summary: Creating A Draft Campaign
+      description: Creates a new campaign in your account. This method does not send the campaign, but rather creates it as
+        a draft, ready for sending or testing. You can choose to send either a regular campaign or an AB split campaign. Campaign
+        content must be specified from a web location. Ignore ***(A/B Split Campaign Option)*** if you want to create a regular
+        campaign.
+      tags:
+      - Campaigns
+      parameters:
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the campaign. ***(Required)***
+                Subject:
+                  type: string
+                  description: The subject line of the new campaign. ***(Required)***
+                SenderEmail:
+                  type: string
+                  description: The sender email of the campaign. ***(Required)***
+                ReplyToEmail:
+                  type: string
+                  description: The email address to which recipients replies will arrive. It must be one of your sender accounts.
+                    If not specified, the sender's email will be assumed. ***(Required)***
+                ConfirmationToEmail:
+                  type: string
+                  description: The email address to which a confirmation message will be sent when the campaign has been successfully
+                    sent.
+                WebLocation:
+                  type: string
+                  description: A url to retrieve the html content for the campaign. We'll automatically move all CSS inline.
+                    ***(Optional)***
+                MailingLists:
+                  type: string
+                  description: A list of mailing lists in your account to which the campaign will be sent to. ***(Optional)***
+                SegmentID:
+                  type: string
+                  description: The ID of a segment in the specified mailing list to filter the recipients with. If not specified,
+                    the campaign will be sent to all active subscribers of the mailing list. ***(Optional)***
+                IsAB:
+                  type: string
+                  description: A flag that defines if a campaign is an AB campaign. ***(Required)***
+                ABCampaignType:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you want to send an AB split campaign you should specify
+                    this parameter to one of the following values. ***(Required)***'
+                TrackInGoogleAnalytics:
+                  type: string
+                  description: 'Tracks traffic from your campaign to your site. Note: You need to have Google Analytics configured
+                    on your site to use this feature. ***(Optional)***'
+                SubjectB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the subject line (ABCampaignType=Subject),'
+                WebLocationB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the html content (ABCampaignType=Content),'
+                SenderEmailB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the sender (ABCampaignType=Sender),'
+                HoursToTest:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you must set
+                    this parameter to specify how long the test will run, before determining which will be the winning version
+                    to be sent to the rest of the recipients.'
+                ListPercentage:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you must set
+                    this parameter to specify a portion of the target recipients that will receive the test versions. For
+                    example, if you specify 10, then 10% of your recipients will receive the A version and another 10% will
+                    receive the B version.'
+                ABWinnerSelectionType:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you may set this
+                    parameter to one of the following values to specify the method to determine the winning version for the
+                    test. ***(Optional)*** <br/> If not set, OpenRate will be assumed. If specified in a regular campaign,
+                    it will be ignored.'
+            example:
+              Name: Test campaign
+              Subject: Some subject
+              SenderEmail: something@email.com
+              ReplyToEmail: something@email.com
+              ConfirmationToEmail: something@email.com
+              WebLocation: http://www.mysite.gr/newsletter/index
+              MailingLists:
+              - MailingListID: adaf2fe1-55db-42dc-aaf8-56d8f502138d
+                SegmentID: '10166'
+              - MailingListID: dce99b7a-2619-4805-aaeb-7fecdcb3c71b
+              IsAB: 'true'
+              ABCampaignType: Content
+              WebLocationB: http://www.mysite.gr/newsletter/index
+              HoursToTest: '2'
+              ListPercentage: '20'
+              ABWinnerSelectionType: OpenRate
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: Contains the id of the new campaign.
+              example:
+                Code: 0
+                Error: null
+                Context: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/update.{Format}:
+    post:
+      operationId: updatingADraftCampaign
+      summary: Updating A Draft Campaign
+      description: Updates properties of an existing draft A/B campaign in your account. Non-draft campaigns cannot be updated.
+        Ignore ***(A/B Split Campaign Option)*** if you want to create a regular campaign.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the campaign. ***(Optional)***
+                Subject:
+                  type: string
+                  description: The subject line of the new campaign. ***(Optional)***
+                SenderEmail:
+                  type: string
+                  description: The sender email of the campaign. ***(Optional)***
+                ReplyToEmail:
+                  type: string
+                  description: The email address to which recipients replies will arrive. It must be one of your sender accounts.
+                    If not specified, the sender's email will be assumed. ***(Optional)***
+                ConfirmationToEmail:
+                  type: string
+                  description: The email address to which a confirmation message will be sent when the campaign has been successfully
+                    sent.
+                WebLocation:
+                  type: string
+                  description: A url to retrieve the html content for the campaign. We'll automatically move all CSS inline.
+                    ***(Optional)***
+                MailingLists:
+                  type: string
+                  description: A list of mailing lists in your account to which the campaign will be sent to. ***(Optional)***
+                SegmentID:
+                  type: string
+                  description: The ID of a segment in the specified mailing list to filter the recipients with. If not specified,
+                    the campaign will be sent to all active subscribers of the mailing list. ***(Optional)***
+                IsAB:
+                  type: string
+                  description: A flag that defines if a campaign is an AB campaign. ***(Optional)***
+                ABCampaignType:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you want to send an AB split campaign you should specify
+                    this parameter to one of the following values. ***(Optional)***'
+                TrackInGoogleAnalytics:
+                  type: string
+                  description: 'Tracks traffic from your campaign to your site. Note: You need to have Google Analytics configured
+                    on your site to use this feature. ***(Optional)***'
+                SubjectB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the subject line (ABCampaignType=Subject),'
+                WebLocationB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the html content (ABCampaignType=Content),'
+                SenderEmailB:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you wish to send an AB split campaign with two different
+                    versions of the sender (ABCampaignType=Sender),'
+                HoursToTest:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you must set
+                    this parameter to specify how long the test will run, before determining which will be the winning version
+                    to be sent to the rest of the recipients.'
+                ListPercentage:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you must set
+                    this parameter to specify a portion of the target recipients that will receive the test versions. For
+                    example, if you specify 10, then 10% of your recipients will receive the A version and another 10% will
+                    receive the B version.'
+                ABWinnerSelectionType:
+                  type: string
+                  description: '***(A/B Split Campaign Option)*** If you choose to send an AB campaign type, you may set this
+                    parameter to one of the following values to specify the method to determine the winning version for the
+                    test. ***(Optional)*** <br/> If not set, OpenRate will be assumed. If specified in a regular campaign,
+                    it will be ignored.'
+            example:
+              Name: Test campaign
+              Subject: Some subject
+              SenderEmail: something@email.com
+              ReplyToEmail: something@email.com
+              ConfirmationToEmail: something@email.com
+              WebLocation: http://www.mysite.gr/newsletter/index
+              MailingLists:
+              - MailingListID: adaf2fe1-55db-42dc-aaf8-56d8f502138d
+                SegmentID: '10166'
+              - MailingListID: dce99b7a-2619-4805-aaeb-7fecdcb3c71b
+              IsAB: 'true'
+              ABCampaignType: Content
+              WebLocationB: http://www.mysite.gr/newsletter/index
+              HoursToTest: '2'
+              ListPercentage: '20'
+              ABWinnerSelectionType: OpenRate
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/delete.{Format}:
+    delete:
+      operationId: deletingACampaign
+      summary: Deleting A Campaign
+      description: Deletes a campaign from your account, draft or even sent.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/send_test.{Format}:
+    post:
+      operationId: testingACampaign
+      summary: Testing a campaign
+      description: Sends a test email of a draft campaign to a list of email addresses you specify for previewing.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TestEmails:
+                  type: string
+                  description: A list of email addresses to send the preview to (maximum 5 recipients, separated by commas).
+                    ***(Required)***
+            example:
+              TestEmails:
+              - email1@email.com
+              - email2@email.com
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/send.{Format}:
+    post:
+      operationId: sendingACampaign
+      summary: Sending a campaign
+      description: Sends an existing draft campaign to all recipients specified in its mailing list. The campaign is sent
+        immediatelly.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/stats/{Type}.{Format}:
+    get:
+      operationId: getCampaignStatistics
+      summary: Get Campaign Statistics
+      description: Returns a detailed list of statistics for a given campaign based on activity such as emails sent, opened,
+        bounced, link clicked, etc. Because the results for this call could be quite big, paging information is required as
+        input. Blueprint also documents this operation as "Get Campaign Statistics With Paging & Filtered".
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Type
+        in: path
+        required: true
+        schema:
+          type: string
+        description: '* Sent: To get information about when and to which recipients the campaign was sent. * Opened: To get
+          information about who opened the campaign. * LinkClicked: To get information about who clicked on which link. *
+          Forward: To get information about who forwarded the campaign using the relevant link on the email body and when.
+          * Unsubscribed : To get information about who unsubscribed from the campaign by clicking on the unsubscribe link
+          and when. * Bounced : To get information about which email recipients failed to receive the campaign. If not specified,
+          the value Sent will be used by default.'
+        example: Sent
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      - name: Page
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: PageSize
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: From
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: To
+        in: query
+        required: false
+        schema:
+          type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following for the campaign :'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 1
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: false
+                  Analytics:
+                  - Context: recipient@email.com
+                    ContextName: recipient name
+                    TotalCount: 1
+                    UniqueCount: 0
+                    ContextDescription: null
+                  - Context: recipient2@email.com
+                    ContextName: recipient2 name
+                    TotalCount: 1
+                    UniqueCount: 0
+                    ContextDescription: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/view_summary.{Format}:
+    get:
+      operationId: campaignSummary
+      summary: Campaign Summary
+      description: Provides a basic summary of the results for any sent campaign such as the number of recipients, opens,
+        clicks, bounces, unsubscribes, forwards etc. to date.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the following information for the given campaign:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  CampaignID: 13cffeee-0b8c-4610-8e0d-efa7bd44be32
+                  ABVersion: null
+                  CampaignName: test image path
+                  CampaignSubject: test image path
+                  MailingLists:
+                  - MailingListID: 84bs231b131-367a-4d73-af11-01b4b45d3f54
+                    SegmentID: 0
+                  CampaignDeliveredOn: /Date(1464256291013+0100)/
+                  To: /Date(1465481260987+0100)/
+                  From: /Date(1464256291013+0100)/
+                  TotalOpens: 1340
+                  UniqueOpens: 780
+                  TotalBounces: 4
+                  TotalComplaints: 0
+                  TotalForwards: 55
+                  UniqueForwards: 55
+                  TotalUnsubscribes: 7
+                  TotalLinkClicks: 976
+                  UniqueLinkClicks: 711
+                  Sent: 2550
+                  CampaignIsArchived: false
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/stats/countries.{Format}:
+    get:
+      operationId: activityByLocation
+      summary: Activity By Location
+      description: Returns a detailed report of your campaign opens (unique and total) by country.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following for the campaign :'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 0
+                    CurrentPage: 1
+                    TotalResults: 0
+                    TotalPageCount: 0
+                    SortExpression: null
+                    SortIsAscending: false
+                  Analytics:
+                  - Context: '  '
+                    ContextName: null
+                    TotalCount: 1
+                    UniqueCount: 1
+                    ContextDescription: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/stats/links.{Format}:
+    get:
+      operationId: linkActivity
+      summary: Link Activity
+      description: Returns a list with your campaign links and how many clicks have been made by your recipients, either unique
+        or total.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'This contains all the following for the campaign :'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 0
+                    CurrentPage: 1
+                    TotalResults: 0
+                    TotalPageCount: 0
+                    SortExpression: null
+                    SortIsAscending: false
+                  Analytics:
+                  - Context: http://someUrl.com/
+                    ContextName: null
+                    TotalCount: 34
+                    UniqueCount: 30
+                    ContextDescription: null
+                  - Context: http://someUrl.com/product1/
+                    ContextName: null
+                    TotalCount: 95
+                    UniqueCount: 67
+                    ContextDescription: null
+                  - Context: http://someUrl.com/product2/
+                    ContextName: null
+                    TotalCount: 102
+                    UniqueCount: 78
+                    ContextDescription: null
+                  - Context: https://twitter.com/myCompany
+                    ContextName: null
+                    TotalCount: 89
+                    UniqueCount: 89
+                    ContextDescription: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/schedule.{Format}:
+    post:
+      operationId: schedulingACampaign
+      summary: Scheduling A Campaign
+      description: Assigns a scheduled date and time at which the campaign will be delivered.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                DateTime:
+                  type: string
+                  description: The date and time at which the campaign will be delivered. ***(Required)***
+                Timezone:
+                  type: string
+                  description: The timezone the specified date and time refers to. By default the timezone in your settings
+                    panel will be used. If specified, one of the following values must be used. ***(Optional)***
+            example:
+              DateTime: 24-06-2016 13:17
+              Timezone: US Eastern Standard Time
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/unschedule.{Format}:
+    post:
+      operationId: unschedulingACampaign
+      summary: Unscheduling a campaign
+      description: Removes a previously defined scheduled date and time from a campaign, so that it will be delivered immediately
+        if already queued or when sent.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /campaigns/{CampaignID}/view_ab_summary.{Format}:
+    get:
+      operationId: aBTestCampaignSummary
+      summary: A/B Test Campaign Summary
+      description: Provides a basic summary of the results for a sent AB test campaign, separately for each version (A and
+        B), such as the number of recipients, opens, clicks, bounces, unsubscribes, forwards etc to date.
+      tags:
+      - Campaigns
+      parameters:
+      - name: CampaignID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: afdc4ef6-999f-4d74-905b-ec234789f9d6
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error message. This will be null if successful.
+                  Context:
+                    description: 'Contains all the following information for the A/B split test campaign :'
+                  CampaignID:
+                    description: The id of A campaign.
+                  A:
+                    description: 'Contains the following information for campaign A :'
+                  ABVersion:
+                    description: The version of the campaign. Will be `0` for A and `1` for B.
+                  CampaignName:
+                    description: The name of the campaign.
+                  CampaignSubject:
+                    description: The subject of the campaign.
+                  MailingLists:
+                    description: Contains a list of mailing lists and segments, that the campaign was sent to.
+                  Campaign:
+                    description: Will be null for this case.
+                  ID:
+                    description: The id of the mailing list.
+                  Name:
+                    description: The name of the mailing list.
+                  ActiveMemberCount:
+                    description: The number of the active members for the mailing list.
+                  BouncedMemberCount:
+                    description: The number of the bounced emails for the mailing list.
+                  RemovedMemberCount:
+                    description: The number of the removed emails for the mailing list.
+                  UnsubscribedMemberCount:
+                    description: The number of the unsubscribed emails for the mailing list.
+                  Status:
+                    description: The status of the mailing list.
+                  CustomFieldsDefinition:
+                    description: The details of each custom field for the mailing list. This will be blank if there are no
+                      custom fields for this mailing list.
+                  CreatedBy:
+                    description: The ip from where the mailing list was created.
+                  CreatedOn:
+                    description: The date time that the mailing list was created.
+                  UpdatedBy:
+                    description: The ip from where the mailing list was updated.
+                  UpdatedOn:
+                    description: The date time that the mailing list was updated.
+                  ImportOperation:
+                    description: The details of the latest import operation that was performed in the mailing list.
+                  Segment:
+                    description: A list with all the following information for the given segment. Will be null if the campaign
+                      was not sent to a segment of this mailing list.
+                  CampaignDeliveredOn:
+                    description: The date time that the campaign
+                  To:
+                    description: The date time that the measurement ended.
+                  From:
+                    description: The date time that the measurement started.
+                  TotalOpens:
+                    description: The number of the total opens for the given campaign.
+                  UniqueOpens:
+                    description: The number of the total unique opens for the given campaign.
+                  TotalBounces:
+                    description: The number of the total bounces for the given campaign.
+                  TotalComplaints:
+                    description: The number of the total complaints for the given campaign.
+                  TotalForwards:
+                    description: The number of the total forwards for the given campaign. This will count emails forwarded
+                      by the "Forward to a friend" personalization tag only.
+                  UniqueForwards:
+                    description: The number of the total unique forwards for the given campaign. This will count emails forwarded
+                      by the "Forward to a friend" personalization tag only.
+                  TotalUnsubscribes:
+                    description: The number of the total unsubscribed recipients for the given campaign.
+                  TotalLinkClicks:
+                    description: The number of the total link clicks for the given campaign.
+                  UniqueLinkClicks:
+                    description: The number of the total unique link clicks for the given campaign.
+                  Sent:
+                    description: The number of the total sent emails.
+                  CampaignIsArchived:
+                    description: Campaigns that are older than 3 months get Archived and only high-level data are available
+                      for this campaign.
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  CampaignID: afdc4ef6-999f-4d74-905b-ec234789f9d6
+                  A:
+                    CampaignID: afdc4ef6-999f-4d74-905b-ec234789f9d6
+                    ABVersion: 0
+                    CampaignName: Test AB content
+                    CampaignSubject: Test AB content
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: afdc4ef6-999f-4d74-905b-ec234789f9d6
+                        Name: Customers
+                        ActiveMemberCount: 1600
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 5
+                        UnsubscribedMemberCount: 56
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 200.205.214.234
+                        CreatedOn: /Date(1454421389673+0000)/
+                        UpdatedBy: 200.205.214.234
+                        UpdatedOn: /Date(1454421389673+0000)/
+                        ImportOperation: null
+                      Segment: null
+                    - Campaign: null
+                      MailingList:
+                        ID: a589366a-1a34-4965-ac50-f121234we9e
+                        Name: Customers2
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 000.205.214.234
+                        CreatedOn: /Date(1461777017163+0100)/
+                        UpdatedBy: 000.205.214.234
+                        UpdatedOn: /Date(1461779935800+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    CampaignDeliveredOn: /Date(1461783674793+0100)/
+                    To: /Date(1465550745283+0100)/
+                    From: /Date(1461779880247+0100)/
+                    TotalOpens: 1834
+                    UniqueOpens: 1111
+                    TotalBounces: 0
+                    TotalComplaints: 0
+                    TotalForwards: 67
+                    UniqueForwards: 44
+                    TotalUnsubscribes: 6
+                    TotalLinkClicks: 1444
+                    UniqueLinkClicks: 1234
+                    Sent: 1
+                    CampaignIsArchived: false
+                  B:
+                    CampaignID: 04d8677b-e87b-4489-99e6-5867b648e1be
+                    ABVersion: 1
+                    CampaignName: Test AB content
+                    CampaignSubject: Test AB content
+                    MailingLists:
+                    - Campaign: null
+                      MailingList:
+                        ID: ba5ab5a8-391f-4e96-8a83-b6838af8683b
+                        Name: Andreas2323
+                        ActiveMemberCount: 0
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 0
+                        UnsubscribedMemberCount: 0
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 212.205.224.198
+                        CreatedOn: /Date(1454421389673+0000)/
+                        UpdatedBy: 212.205.224.198
+                        UpdatedOn: /Date(1454421389673+0000)/
+                        ImportOperation: null
+                      Segment: null
+                    - Campaign: null
+                      MailingList:
+                        ID: a589466a-12344-4965-ac50-f1299fe5979e
+                        Name: Customers
+                        ActiveMemberCount: 2030
+                        BouncedMemberCount: 0
+                        RemovedMemberCount: 12
+                        UnsubscribedMemberCount: 33
+                        Status: 0
+                        CustomFieldsDefinition: []
+                        CreatedBy: 2.11.710.201
+                        CreatedOn: /Date(1461777017163+0100)/
+                        UpdatedBy: 2.11.70.209
+                        UpdatedOn: /Date(1461779935800+0100)/
+                        ImportOperation: null
+                      Segment: null
+                    CampaignDeliveredOn: /Date(1461783674793+0100)/
+                    To: /Date(1465550745287+0100)/
+                    From: /Date(1461779880247+0100)/
+                    TotalOpens: 1234
+                    UniqueOpens: 1111
+                    TotalBounces: 0
+                    TotalComplaints: 0
+                    TotalForwards: 12
+                    UniqueForwards: 12
+                    TotalUnsubscribes: 5
+                    TotalLinkClicks: 1222
+                    UniqueLinkClicks: 999
+                    Sent: 1
+                    CampaignIsArchived: false
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments.{Format}:
+    get:
+      operationId: gettingSegments
+      summary: Getting segments
+      description: Get a list of all segments with their criteria for the given mailing list.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 100
+                    CurrentPage: 1
+                    TotalResults: 1
+                    TotalPageCount: 1
+                    SortExpression: CreatedOn
+                    SortIsAscending: false
+                  Segments:
+                  - ID: 7314
+                    Name: City
+                    MatchType: 1
+                    Criteria:
+                    - ID: 12244
+                      SegmentID: 7314
+                      Field: 2
+                      CustomFieldID: null
+                      Comparer: 0
+                      Value: test
+                      DateFrom: null
+                      DateTo: null
+                      Properties: null
+                      Subscriteria: null
+                    - ID: 12348
+                      SegmentID: 7314
+                      Field: 99
+                      CustomFieldID: e4823107-d02d-48af-8190-d8694a33401e
+                      Comparer: 0
+                      Value: UK
+                      DateFrom: null
+                      DateTo: null
+                      Properties: null
+                      Subscriteria: null
+                    CreatedBy: 211.11.111.11
+                    CreatedOn: /Date(1451490040010+0000)/
+                    UpdatedBy: 211.11.111.11
+                    UpdatedOn: /Date(1451490040010+0000)/
+                    FetchType: 0
+                    FetchValue: 0
+                    Description: Fetch all where "City" is "UK" or "Recipient Name" is "Test"
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/details.{Format}:
+    get:
+      operationId: gettingSegmentDetails
+      summary: Getting segment details
+      description: Gets detailed information on a specific segment and its criteria. However, it does not include the subscribers
+        returned by the segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10198'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 10198
+                  Name: test
+                  MatchType: 0
+                  Criteria:
+                  - ID: 15778
+                    SegmentID: 10198
+                    Field: 2
+                    CustomFieldID: null
+                    Comparer: 0
+                    Value: Paul
+                    DateFrom: null
+                    DateTo: null
+                    Properties: null
+                    Subscriteria: null
+                  - ID: 15779
+                    SegmentID: 10198
+                    Field: 4
+                    CustomFieldID: null
+                    Comparer: 8
+                    Value: '5'
+                    DateFrom: /Date(1465167600000+0100)/
+                    DateTo: /Date(1465945200000+0100)/
+                    Properties: null
+                    Subscriteria: null
+                  CreatedBy: 212.123.123.112
+                  CreatedOn: /Date(1465806037033+0100)/
+                  UpdatedBy: 212.123.123.112
+                  UpdatedOn: /Date(1465806269980+0100)/
+                  FetchType: 0
+                  FetchValue: 0
+                  Description: Fetch all where "Recipient Name" is "Paul" and "Campaigns Opened" is greater than "5"
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/members.{Format}:
+    get:
+      operationId: gettingSegmentSubscribers
+      summary: Getting segment subscribers
+      description: Gets a list of the subscribers that the specified segment returns according to its criteria. Because the
+        results for this call could be quite big, paging information is required as input.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10198'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 500
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: false
+                  Subscribers:
+                  - ID: 07111755-8ee4-1111-ad2b-1111899c6f
+                    Name: Paul
+                    Email: paul@email.com
+                    CreatedOn: /Date(1461777177393+0100)/
+                    UpdatedOn: /Date(1461777177393+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 2
+                    CustomFields:
+                    - CustomFieldID: 63705cf2-7cbb-4ac1-a246-1a8c1b416026
+                      Name: CheckBox
+                      Value: 'True'
+                    - CustomFieldID: 63705cf2-7cbb-4ac1-a246-1a8c1b416026
+                      Name: Date
+                      Value: 4/12/2016 12:00:00 AM
+                    - CustomFieldID: 9df6dcc4-bef2-47e7-93af-86889b6b6d6a
+                      Name: Age
+                      Value: '25'
+                    - CustomFieldID: 0d2199aa-65fc-448c-b9fe-199e3b72ebc5
+                      Name: Some custom field
+                      Value: Something2
+                    - CustomFieldID: 46721a6b-09aa-46ff-bab1-a0b75dea24cf
+                      Name: Some custom field 2
+                      Value: Text2
+                    RemovedOn: null
+                  - ID: 0bb00735-7ec7-41de-ab04-d622f67340c4
+                    Name: John
+                    Email: john@email.com
+                    CreatedOn: /Date(1461777334373+0100)/
+                    UpdatedOn: /Date(1461783253670+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 0
+                    CustomFields:
+                    - CustomFieldID: 0bb00735-7ec7-41de-ab04-d622f67340c4
+                      Name: Country
+                      Value: UK
+                    - CustomFieldID: 46721a6b-09aa-46ff-bab1-a0b75dea24cf
+                      Name: Status
+                      Value: single
+                    RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/create.{Format}:
+    post:
+      operationId: creatingANewEmptySegment
+      summary: Creating a new empty segment
+      description: Creates a new empty segment (without criteria) for the given mailing list. You may specify the name of
+        the segment and the way the criteria will match together. Blueprint also documents this operation as "Creating a new
+        segment".
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the segment. ***(Required)***
+                MatchType:
+                  type: string
+                  description: Specifies how the segment's criteria will match together. This must be one of the following
+                    values. ***(Optional)*** <br/> If not specified, `All` will be assumed.
+                FetchType:
+                  type: string
+                  description: Specifies how many of the criteria matching subscribers will be contained in the created segment.***(Optional)***
+                    <br/> If not specified, `All` will be assumed.
+                FetchValue:
+                  type: string
+                  description: Specifies the maximum number for `FetchType:Top` or percentage for `FetchType:TopPercent`of
+                    members to be contained in the created segment.  If not specified, `0` will be assumed.
+            example:
+              Name: New Customers
+              MatchType: All
+              FetchType: Top
+              FetchValue: '200'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message. This will be null if successful.
+                  Context:
+                    description: Contains the id of the new segment.
+              example:
+                Code: 0
+                Error: null
+                Context: 10199
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/update.{Format}:
+    post:
+      operationId: updatingASegment
+      summary: Updating a segment
+      description: Updates the properties and criteria of an existing segment. You may update the name and match type of the
+        segment. If criteria are included these will also be updated. You may update only the criteria. In that case, the
+        existing name and settings will be retained.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the segment. ***(Optional)*** <br/> If not specified, the existing name will be
+                    retained.
+                MatchType:
+                  type: string
+                  description: Specifies how the segment's criteria will match together. This must be one of the following
+                    values. ***(Optional)*** <br/> If not specified, existing settings will be retained.
+                FetchType:
+                  type: string
+                  description: Specifies how many of the criteria matching subscribers will be contained in the created segment.
+                    ***(Optional)*** <br/> If not specified, existing settings will be retained.
+                FetchValue:
+                  type: string
+                  description: Specifies the maximum number for `FetchType:Top` or percentage for `FetchType:TopPercent`of
+                    members to be contained in the created segment.  If not specified, `0` will be assumed.
+                Criteria:
+                  type: string
+                  description: An array of the criteria to filter the mailing list by. ***(Optional)*** <br/> If not specified,
+                    existing criteria will be retained.
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following
+                    values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be
+                    one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Name: Customer Tracking and Opener
+              MatchType: Any
+              FetchType: All
+              Criteria:
+              - Field: AddedAnythingToCart
+                Comparer: IsTrue
+                Times: 2
+                ProductCode: '123'
+                LastXMinutes: 4320
+                WebsiteId: 12345678-1234-abdc-efgh-1231bc456efg789hij
+              - Field: OpenedAnyCampaign
+                Comparer: IsTrue
+                DateFrom: '2019-09-01'
+                DateTo: '2020-12-01'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/criteria/add.{Format}:
+    post:
+      operationId: addingCriteriaToSegments
+      summary: Adding criteria to segments
+      description: Adds a new criterion (a rule) to the specified segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following
+                    values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be
+                    one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Field: DateAdded
+              DateFunction: Year
+              Comparer: Is
+              Value: '2020'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: Contains the new criteriaID.
+              example:
+                Code: 0
+                Error: null
+                Context: 15783
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/criteria/{CriteriaID}/update.{Format}:
+    post:
+      operationId: updatingSegmentCriteria
+      summary: Updating segment criteria
+      description: Updates an existing criterion in the specified segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: CriteriaID
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '15783'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following
+                    values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be
+                    one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Field: LinkURL
+              Comparer: is
+              Value: https://www.moosend.com/
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: Contains the updated criteriaID.
+              example:
+                Code: 0
+                Error: null
+                Context: 15783
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/delete.{Format}:
+    delete:
+      operationId: deletingASegment
+      summary: Deleting A Segment
+      description: Deletes a segment along with its criteria from the mailing list. The subscribers of the mailing list that
+        the segment returned are not deleted or affected in any way.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+components:
+  securitySchemes:
+    apikeyQuery:
+      type: apiKey
+      in: query
+      name: apikey
+      description: Moosend account API key, supplied as the `apikey` query-string parameter on every request. Generated in
+        the account Settings menu.
+security:
+- apikeyQuery: []

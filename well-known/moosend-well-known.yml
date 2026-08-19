@@ -1,0 +1,107 @@
+generated: '2026-08-13'
+method: probed
+source: live GET of the RFC 8615 discovery paths on every Moosend host in apis.yml + openapi servers[]
+hosts_probed:
+  - https://moosend.com
+  - https://api.moosend.com
+  - https://docs.moosend.com
+
+summary:
+  real_documents: 1
+  real_documents_owned_by_moosend: 0
+  note: >-
+    Moosend serves no /.well-known/ discovery surface of its own. The single 200
+    on these paths is an OpenID Connect discovery document at docs.moosend.com —
+    and it is not Moosend's: its issuer is https://login.salesforce.com, because
+    docs.moosend.com is a Salesforce Experience Cloud help centre. It describes
+    the Salesforce identity provider behind the docs portal, not the Moosend API,
+    which authenticates with an `apikey` query-string parameter and has no OAuth
+    or OIDC surface at all. No WellKnown pointer is emitted in apis.yml for that
+    reason — see ownership_finding below.
+
+documents:
+  - host: moosend.com
+    path: /.well-known/security.txt
+    status: 404
+  - host: moosend.com
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: moosend.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+  - host: moosend.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: moosend.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+  - host: moosend.com
+    path: /.well-known/agent-card.json
+    status: 404
+  - host: moosend.com
+    path: /.well-known/agent.json
+    status: 404
+
+  - host: api.moosend.com
+    path: /.well-known/security.txt
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/openid-configuration
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/agent-card.json
+    status: 404
+  - host: api.moosend.com
+    path: /.well-known/agent.json
+    status: 404
+
+  - host: docs.moosend.com
+    path: /.well-known/security.txt
+    status: 404
+  - host: docs.moosend.com
+    path: /.well-known/openid-configuration
+    status: 200
+    content_type: application/json;charset=UTF-8
+    file: moosend-docs-openid-configuration.json
+    owned_by_provider: false
+    note: >-
+      Real OIDC discovery document, but issuer = https://login.salesforce.com and
+      every endpoint is on login.salesforce.com. This is the Salesforce Experience
+      Cloud identity provider that hosts the Moosend help centre, not a Moosend
+      authorization server. Saved for the record; not credited to Moosend.
+  - host: docs.moosend.com
+    path: /.well-known/oauth-authorization-server
+    status: 404
+  - host: docs.moosend.com
+    path: /.well-known/api-catalog
+    status: 404
+  - host: docs.moosend.com
+    path: /.well-known/ai-plugin.json
+    status: 404
+  - host: docs.moosend.com
+    path: /.well-known/agent-card.json
+    status: 404
+  - host: docs.moosend.com
+    path: /.well-known/agent.json
+    status: 404
+
+ownership_finding: >-
+  The only 200 on the discovery surface belongs to Salesforce, so no `WellKnown`
+  and no `SecurityTxt` common[] pointer is emitted. Recording the absence is the
+  measurement; asserting a pointer would credit Moosend with a well-known
+  catalogue it does not serve.
+
+gap_for_provider: >-
+  Moosend publishes a vulnerability disclosure policy at
+  https://moosend.com/privacy-policy/disclosure/ but does not surface it at
+  /.well-known/security.txt (RFC 9116). Serving a three-line security.txt naming
+  that policy URL would make an existing programme machine-discoverable.

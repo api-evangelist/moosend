@@ -1,0 +1,95 @@
+generated: '2026-08-13'
+method: derived
+source: openapi/moosend-openapi.yml (path structure, id-reference parameters and documented response fields)
+
+id_convention:
+  style: uuid
+  prefixed: false
+  note: >-
+    All identifiers are bare UUIDs with no type prefix, so an id alone does not
+    reveal which entity it belongs to.
+
+entities:
+  - name: MailingList
+    id_field: MailingListID
+    root: true
+    paths: ['/lists.{Format}', '/lists/{MailingListID}/details.{Format}']
+    operations: [gettingAllActiveMailingLists, gettingAllActiveMailingListsWithPaging, gettingMailingListDetails, creatingAMailingList, updatingAMailingList, deletingAMailingList]
+    fields_documented: [ID, Name, ActiveMemberCount, BouncedMemberCount, RemovedMemberCount, UnsubscribedMemberCount, ConfirmationPage, RedirectAfterUnsubscribePage, CreatedOn, UpdatedOn, Status, CustomFieldsDefinition]
+
+  - name: CustomField
+    id_field: CustomFieldID
+    parent: MailingList
+    paths: ['/lists/{MailingListID}/customfields/create.{Format}']
+    operations: [creatingACustomField, updatingACustomField, removingACustomField]
+    fields_documented: [ID, Name, Context, IsRequired, Type, CreatedOn]
+
+  - name: Subscriber
+    id_field: SubscriberID
+    parent: MailingList
+    paths: ['/lists/{MailingListID}/subscribers/{Status}.{Format}', '/subscribers/{MailingListID}/view.{Format}']
+    operations: [gettingSubscribers, getSubscriberByEmailAddress, getSubscriberById, addingSubscribers, addingMultipleSubscribers, updatingASubscriber, removingASubscriber, removingMultipleSubscribers, unsubscribingSubscribersFromMailingList, unsubscribingSubscribersFromAccount, unsubscribingSubscribersFromMailingListAndASpecifiedCampaign]
+    fields_documented: [ID, Name, Email, CreatedOn, UnsubscribedOn, UnsubscribedFromID, SubscribeType, SubscribeMethod, CustomFields, RemovedOn]
+    status_values: [Subscribed, Unsubscribed, Bounced, Removed, All]
+
+  - name: Campaign
+    id_field: CampaignID
+    root: true
+    paths: ['/campaigns.{Format}', '/campaigns/{CampaignID}/view.{Format}']
+    operations: [getAllCampaigns, getCampaignsByPage, getCampaignsByPageAndPagesize, gettingCampaignDetails, cloningAnExistingCampaign, creatingADraftCampaign, updatingADraftCampaign, deletingACampaign, testingACampaign, sendingACampaign, schedulingACampaign, unschedulingACampaign]
+    fields_documented: [ID, Name, Subject, SiteName, ConfirmationTo, CreatedOn, DeliveredOn, ScheduledFor, Status, ABHoursToTest, IsTransactional, MailingLists, Segments]
+
+  - name: Sender
+    id_field: null
+    natural_key: Email
+    root: true
+    paths: ['/senders/find_all.{Format}', '/senders/find_one.{Format}']
+    operations: [gettingAllYourSenders, gettingSenderDetails]
+
+  - name: Segment
+    id_field: SegmentID
+    parent: MailingList
+    paths: ['/lists/{MailingListID}/segments.{Format}']
+    operations: [gettingSegments, gettingSegmentDetails, gettingSegmentSubscribers, creatingANewEmptySegment, updatingASegment, deletingASegment]
+    fields_documented: [ID, Name, MatchType, Criteria]
+
+  - name: SegmentCriteria
+    id_field: CriteriaID
+    parent: Segment
+    paths: ['/lists/{MailingListID}/segments/{SegmentID}/criteria/add.{Format}']
+    operations: [addingCriteriaToSegments, updatingSegmentCriteria]
+
+  - name: CampaignStatistics
+    id_field: null
+    parent: Campaign
+    paths: ['/campaigns/{CampaignID}/stats/{Type}.{Format}', '/campaigns/{CampaignID}/view_summary.{Format}']
+    operations: [getCampaignStatistics, campaignSummary, activityByLocation, linkActivity, aBTestCampaignSummary]
+    types: [sent, opened, unique_opens, linkclicked, unique_linkclicked, bounced, unsubscribed, forwards, countries, links]
+
+relationships:
+  - {from: MailingList, to: Subscriber, kind: has_many, via: MailingListID}
+  - {from: MailingList, to: CustomField, kind: has_many, via: MailingListID}
+  - {from: MailingList, to: Segment, kind: has_many, via: MailingListID}
+  - {from: Segment, to: MailingList, kind: belongs_to, via: MailingListID}
+  - {from: Segment, to: SegmentCriteria, kind: has_many, via: SegmentID}
+  - {from: SegmentCriteria, to: Segment, kind: belongs_to, via: SegmentID}
+  - {from: Subscriber, to: MailingList, kind: belongs_to, via: MailingListID}
+  - {from: Subscriber, to: CustomField, kind: has_many, via: CustomFields, note: values keyed by custom field name}
+  - {from: Campaign, to: MailingList, kind: has_many, via: MailingLists, note: a campaign targets one or more lists}
+  - {from: Campaign, to: Segment, kind: has_many, via: Segments}
+  - {from: Campaign, to: Sender, kind: has_one, via: ConfirmationTo/sender email}
+  - {from: Campaign, to: CampaignStatistics, kind: has_many, via: CampaignID}
+  - {from: Subscriber, to: Campaign, kind: belongs_to, via: UnsubscribedFromID, note: records which campaign drove the unsubscribe}
+
+notes:
+  - >-
+    Subscriber is scoped to a MailingList, not to the account — the same person on
+    two lists is two Subscriber records with two ids. Only
+    unsubscribingSubscribersFromAccount operates across lists.
+  - >-
+    A Segment is defined on a list and evaluated by its Criteria; segment
+    membership is read through gettingSegmentSubscribers rather than stored.
+  - >-
+    Automations, landing pages, forms and the SMTP/transactional surface appear
+    in the product and on the status page but have no operations in the published
+    v3 contract, so they are absent from this model.

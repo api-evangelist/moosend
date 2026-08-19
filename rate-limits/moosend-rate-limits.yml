@@ -1,3 +1,11 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  https://docs.moosend.com/api-documentation/articles/KnowledgeBase/54558-API-rate-limiting?lang=en_US
+  — corroborated per-operation by the prose in Moosend's own API Blueprint at
+  https://moosendapp.docs.apiary.io/api-description-document ("The rate limit for
+  this request is 10 requests per 10 seconds (*per API key)" and equivalents).
+limit_count: 10
 name: Moosend API Rate Limits
 description: >-
   Moosend enforces per-endpoint rate limits measured per API key to prevent the
@@ -90,10 +98,23 @@ rateLimits:
     periodUnit: null
     scope: api-key
 errorHandling:
-  httpStatus: 429
+  httpStatus: 200
+  bodyCode: 429
   errorCode: RATE-LIMITING
+  bodyExample: '{"Code": 429, "Error": "RATE-LIMITING", "Context": null}'
   description: >-
-    When a rate limit threshold is exceeded, the API returns HTTP status 429
-    with the error code RATE-LIMITING in the response body. Implement
-    exponential backoff and retry logic to handle rate limit responses
-    gracefully.
+    When a rate limit threshold is exceeded the response is still HTTP 200; the
+    429 is carried in the `Code` field of the body envelope alongside
+    `"Error": "RATE-LIMITING"`. A client branching on the HTTP status will treat
+    a throttled call as a success. Corrected 2026-08-13 — an earlier round of this
+    file recorded httpStatus 429, which the provider's documentation does not
+    support.
+  responseHeaders: []
+  responseHeadersNote: >-
+    Moosend documents no RateLimit-*, X-RateLimit-* or Retry-After response
+    header. There is no runtime signal of remaining budget, so a client must
+    track its own call timestamps and sleep the full published window (1s, 10s
+    or 60s depending on the endpoint) before retrying.
+  retrySafety: >-
+    The API has no idempotency key. GET statistics calls are safe to retry; the
+    subscriber and campaign POSTs are not — re-read state before retrying.

@@ -1,0 +1,64 @@
+generated: '2026-08-13'
+method: derived
+source: >-
+  openapi/moosend-openapi.yml (transcribed from the Moosend API Blueprint) plus
+  https://docs.moosend.com/api-documentation/articles/KnowledgeBase/54558-API-rate-limiting
+format: proprietary-envelope
+rfc9457: false
+
+envelope:
+  media_type: application/json
+  fields: [Code, Error, Context]
+  success: {Code: 0, Error: null}
+  failure: {Code: non-zero, Error: string}
+  description: >-
+    Moosend does not use HTTP status codes to signal API-level failure. Every one
+    of the 48 responses documented in the published contract is HTTP 200; the
+    outcome is carried in the `Code` integer and the `Error` string inside the
+    body. A client that branches on response.ok will treat a rate-limited or
+    rejected call as a success.
+
+problems:
+  - code: 0
+    title: Success
+    detail: The call completed. `Error` is null and `Context` carries the result.
+    http_status: 200
+    evidence: '49 documented response examples in the API Blueprint carry "Code": 0.'
+
+  - code: 429
+    title: RATE-LIMITING
+    detail: >-
+      The per-API-key rate limit for this endpoint was exceeded. Returned in the
+      response body, not the status line.
+    http_status: 200
+    body_example: '{"Code": 429, "Error": "RATE-LIMITING", "Context": null}'
+    remediation: >-
+      Back off and retry. No Retry-After or RateLimit-* header is returned, so
+      the backoff interval must come from the published per-endpoint budget in
+      rate-limits/moosend-rate-limits.yml (windows are 1s, 10s or 60s).
+    source: https://docs.moosend.com/api-documentation/articles/KnowledgeBase/54558-API-rate-limiting
+
+partial_failures:
+  - operation: addingMultipleSubscribers
+    path: /subscribers/{MailingListID}/subscribe_many.{Format}
+    behaviour: >-
+      Invalid addresses are silently skipped rather than failing the batch. The
+      call still returns Code 0 and reports the skips in `Error` as prose.
+    example_error: '2 items with invalid email address were ignored: email@email, email2@email'
+    agent_note: >-
+      This is the one place a non-null `Error` accompanies a success. An agent
+      must parse `Error` even when `Code` is 0, and the count of ignored records
+      is only available as free text.
+
+gaps:
+  - >-
+    No published error-code registry. Only Code 0 and Code 429 appear anywhere in
+    the provider's own documentation, so the non-zero failure space is undocumented.
+  - No `type` URIs, no machine-readable error taxonomy, no application/problem+json.
+  - No 4xx/5xx responses declared in the contract, so an agent cannot distinguish
+    authentication failure, missing resource and validation failure from the schema.
+recommendation_to_provider: >-
+  Publish the full `Code` registry and return matching HTTP status codes (401 for
+  a bad apikey, 404 for a missing list, 422 for validation, 429 for rate limiting)
+  alongside the existing envelope. RFC 9457 problem+json would make the failure
+  space machine-readable without changing the success shape.

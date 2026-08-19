@@ -1,0 +1,243 @@
+generated: '2026-08-13'
+method: searched
+source: >-
+  Public registry metadata endpoints (registry.npmjs.org, api.nuget.org,
+  packagist.org, proxy.golang.org, pypi.org, rubygems.org) plus the Moosend
+  GitHub organization at https://github.com/moosend
+note: >-
+  Moosend generated a first-party client wrapper for nine languages in October
+  2017 (swagger-codegen against the v3 contract — the .swagger-codegen markers
+  are still committed in the Go and Java repos). Only a subset was ever pushed
+  to a package registry; the rest exist only as GitHub source, and two of the
+  advertised repos (Scala, Swift) are empty. Every API wrapper's newest published
+  release predates 2018 apart from the PHP wrapper (2020). The actively maintained
+  packages are the tracking and UI libraries, not the API SDKs.
+
+packages:
+  # ---- first-party API wrappers -------------------------------------------
+  - language: javascript
+    registry: npm
+    name: moosend-api
+    url: https://www.npmjs.com/package/moosend-api
+    install: npm install moosend-api
+    official: true
+    version: 3.0.1
+    published: '2017-10-03'
+    source_code: https://github.com/moosend/api-wrappers-js
+    covers: Moosend API v3
+    note: >-
+      Last publish 2017-10-03. package.json `repository` points at a personal
+      fork (github.com/mooTheo/Javascript-Moosend-Wrapper), not the org repo.
+
+  - language: csharp
+    registry: nuget
+    name: moosend-api-wrapper
+    url: https://www.nuget.org/packages/moosend-api-wrapper/
+    install: dotnet add package moosend-api-wrapper
+    official: true
+    version: 3.0.1.31
+    published: '2017-12-22'
+    authors: Moosend Ltd
+    source_code: https://github.com/moosend/api-wrappers-dotnet
+    covers: Moosend API v3
+
+  - language: csharp
+    registry: nuget
+    name: Moosend.Wrappers.CSharpWrapper
+    url: https://www.nuget.org/packages/Moosend.Wrappers.CSharpWrapper/
+    install: dotnet add package Moosend.Wrappers.CSharpWrapper
+    official: true
+    version: 3.0.0
+    published: '2017-10-03'
+    authors: moosend
+    source_code: https://github.com/moosend/api-wrappers-dotnet
+    covers: Moosend API v3
+    note: Duplicate of moosend-api-wrapper under a second package id.
+
+  - language: csharp
+    registry: nuget
+    name: moosend
+    url: https://www.nuget.org/packages/moosend/
+    install: dotnet add package moosend
+    official: true
+    version: 2.0.1
+    published: '2014-09-27'
+    authors: Moosend
+    covers: Moosend API v2
+    note: Superseded by the v3 wrappers; retained here because it is still published.
+
+  - language: php
+    registry: packagist
+    name: moosend/phpwrapper
+    url: https://packagist.org/packages/moosend/phpwrapper
+    install: composer require moosend/phpwrapper
+    official: true
+    version: v3.0.1
+    published: '2020-02-25'
+    downloads_total: 66181
+    source_code: https://github.com/moosend/api-wrappers-php
+    covers: Moosend API v3
+
+  - language: go
+    registry: go-modules
+    name: github.com/moosend/api-wrappers-go
+    url: https://pkg.go.dev/github.com/moosend/api-wrappers-go
+    install: go get github.com/moosend/api-wrappers-go
+    official: true
+    version: v3.0.0+incompatible
+    published: '2017-10-03'
+    source_code: https://github.com/moosend/api-wrappers-go
+    covers: Moosend API v3
+    note: Read from proxy.golang.org/@latest. No go.mod — resolves as +incompatible.
+
+  - language: python
+    registry: null
+    name: moosend-api-wrapper
+    url: https://github.com/moosend/api-wrappers-python
+    install: pip install git+https://github.com/moosend/api-wrappers-python
+    official: true
+    version: null
+    published: null
+    source_code: https://github.com/moosend/api-wrappers-python
+    covers: Moosend API v3
+    note: >-
+      setup.py declares NAME "moosend-api-wrapper" VERSION "1.0.0", but PyPI
+      returns 404 for moosend-api-wrapper, moosend_api_wrapper, moosend and
+      moosend-api — the package was never published. Checked, nothing to record.
+      Source last pushed 2017-10-03. Install is source-only.
+
+  - language: java
+    registry: null
+    name: moosend api-wrappers-java
+    url: https://github.com/moosend/api-wrappers-java
+    install: null
+    official: true
+    version: null
+    published: null
+    source_code: https://github.com/moosend/api-wrappers-java
+    covers: Moosend API v3
+    note: >-
+      Gradle/SBT/Ant build files present, generated into io.swagger.client.
+      search.maven.org returns 0 hits for "moosend" — never published to Maven
+      Central. Checked, nothing to record. Source last pushed 2017-10-03.
+
+  - language: ruby
+    registry: null
+    name: moosend api-wrappers-ruby
+    url: https://github.com/moosend/api-wrappers-ruby
+    install: null
+    official: true
+    version: null
+    published: null
+    source_code: https://github.com/moosend/api-wrappers-ruby
+    covers: Moosend API v3
+    note: >-
+      Ships as lib/swagger_client. rubygems.org search for "moosend" returns an
+      empty array. Checked, nothing to record. Source last pushed 2017-10-03.
+
+  - language: scala
+    registry: null
+    name: moosend api-wrappers-scala
+    url: https://github.com/moosend/api-wrappers-scala
+    install: null
+    official: true
+    version: null
+    published: null
+    note: >-
+      Repository exists and is advertised, but the git tree returns HTTP 409
+      "Git Repository is empty." There is no Scala wrapper. Checked, nothing to
+      record.
+
+  - language: swift
+    registry: null
+    name: moosend api-wrappers-swift
+    url: https://github.com/moosend/api-wrappers-swift
+    install: null
+    official: true
+    version: null
+    published: null
+    note: >-
+      Repository exists and is advertised, but the git tree returns HTTP 409
+      "Git Repository is empty." There is no Swift wrapper. Checked, nothing to
+      record.
+
+  # ---- website tracking + UI (actively maintained) -------------------------
+  - language: javascript
+    registry: npm
+    name: mootracker
+    url: https://www.npmjs.com/package/mootracker
+    install: npm install mootracker
+    official: true
+    version: 0.13.9
+    published: '2020-08-19'
+    source_code: https://github.com/moosend/website-tracking-js
+    covers: Moosend website/e-commerce tracking API (page views, product views, add-to-cart, purchases)
+
+  - language: javascript
+    registry: npm
+    name: '@moosend/mooskin'
+    url: https://www.npmjs.com/package/@moosend/mooskin
+    install: npm install @moosend/mooskin
+    official: true
+    version: 1.1.5
+    published: '2025-09-25'
+    versions_published: 284
+    source_code: https://github.com/moosend/mooskin-ui
+    covers: Moosend React UI component library
+    note: The only Moosend package with a release inside the last three years.
+
+  - language: php
+    registry: packagist
+    name: moosend/website-tracking
+    url: https://packagist.org/packages/moosend/website-tracking
+    install: composer require moosend/website-tracking
+    official: true
+    version: 1.12.67
+    published: '2023-07-04'
+    downloads_total: 22156
+    source_code: https://github.com/moosend/website-tracking-php
+
+  - language: php
+    registry: packagist
+    name: moosend/tracker
+    url: https://packagist.org/packages/moosend/tracker
+    install: composer require moosend/tracker
+    official: true
+    version: 1.12.67
+    published: '2023-07-04'
+    downloads_total: 265
+    source_code: https://github.com/moosend/website-tracking-php
+    note: Alias package of moosend/website-tracking, same version line.
+
+  - language: php
+    registry: packagist
+    name: moosend/module-mootracker
+    url: https://packagist.org/packages/moosend/module-mootracker
+    install: composer require moosend/module-mootracker
+    official: true
+    version: 1.0.13
+    published: '2023-07-04'
+    downloads_total: 5091
+    source_code: https://github.com/moosend/website-tracking-modules-magento
+    covers: Magento 2 e-commerce tracking module
+
+third_party:
+  - language: javascript
+    registry: npm
+    name: '@pipedream/moosend'
+    url: https://www.npmjs.com/package/@pipedream/moosend
+    official: false
+    version: 0.1.0
+    published: '2026-05-20'
+    note: Pipedream connector components, not published by Moosend.
+
+currency:
+  api_sdk_newest_release: '2020-02-25'
+  api_sdk_newest_package: moosend/phpwrapper
+  languages_with_published_api_sdk: [javascript, csharp, php, go]
+  languages_source_only: [python, java, ruby]
+  languages_advertised_but_empty: [scala, swift]
+  finding: >-
+    Every published Moosend API client is at least five years old and seven of
+    the nine advertised wrappers are either unpublished or empty. The v3 REST
+    contract itself was last edited in Apiary on 2022-03-16.
