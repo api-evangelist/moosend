@@ -41,38 +41,78 @@ tags:
   - Website Tracking
   - Marketing
 apis:
-  - aid: moosend:moosend-api
-    name: Moosend API
-    description: >-
-      The Moosend REST API (v3) enables programmatic access to email marketing
-      and automation capabilities including managing email lists, subscribers,
-      campaigns, segments, and transactional emails. Authentication is via API
-      key passed as a query string parameter.
-    image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/apis-json-logo.jpg
-    humanURL: https://moosend.com/
-    baseURL: https://api.moosend.com/v3
-    tags:
-      - Email Marketing
-      - Campaigns
-      - Subscribers
-      - Mailing Lists
-      - Segmentation
-      - Transactional Email
-    properties:
-      - type: Documentation
-        url: https://docs.moosend.com/api-documentation?lang=en_US
-      - type: APIReference
-        url: https://moosendapp.docs.apiary.io/
-      - type: OpenAPI
-        url: openapi/moosend-openapi.yml
-      - type: Overlay
-        url: overlays/moosend-openapi-overlay.yaml
-      - type: ErrorCatalog
-        url: errors/moosend-problem-types.yml
-      - type: DataModel
-        url: data-model/moosend-data-model.yml
-      - type: MCPServer
-        url: mcp/moosend-mcp.yml
+- aid: moosend:moosend-campaigns-api
+  name: Moosend Campaigns API
+  description: The Campaigns API from Moosend — 19 operation(s) for campaigns.
+  humanURL: https://moosend.com/
+  baseURL: https://api.moosend.com/v3
+  tags:
+  - Campaigns
+  properties:
+  - type: OpenAPI
+    url: openapi/moosend-campaigns-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moosend.com/api-documentation?lang=en_US
+  - type: APIReference
+    url: https://moosendapp.docs.apiary.io/
+  - type: ErrorCatalog
+    url: errors/moosend-problem-types.yml
+  - type: DataModel
+    url: data-model/moosend-data-model.yml
+- aid: moosend:moosend-mailing-lists-api
+  name: Moosend Mailing Lists API
+  description: The Mailing Lists API from Moosend — 9 operation(s) for mailing lists.
+  humanURL: https://moosend.com/
+  baseURL: https://api.moosend.com/v3
+  tags:
+  - Mailing Lists
+  properties:
+  - type: OpenAPI
+    url: openapi/moosend-mailing-lists-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moosend.com/api-documentation?lang=en_US
+  - type: APIReference
+    url: https://moosendapp.docs.apiary.io/
+  - type: ErrorCatalog
+    url: errors/moosend-problem-types.yml
+  - type: DataModel
+    url: data-model/moosend-data-model.yml
+- aid: moosend:moosend-segments-api
+  name: Moosend Segments API
+  description: The Segments API from Moosend — 8 operation(s) for segments.
+  humanURL: https://moosend.com/
+  baseURL: https://api.moosend.com/v3
+  tags:
+  - Segments
+  properties:
+  - type: OpenAPI
+    url: openapi/moosend-segments-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moosend.com/api-documentation?lang=en_US
+  - type: APIReference
+    url: https://moosendapp.docs.apiary.io/
+  - type: ErrorCatalog
+    url: errors/moosend-problem-types.yml
+  - type: DataModel
+    url: data-model/moosend-data-model.yml
+- aid: moosend:moosend-subscribers-api
+  name: Moosend Subscribers API
+  description: The Subscribers API from Moosend — 11 operation(s) for subscribers.
+  humanURL: https://moosend.com/
+  baseURL: https://api.moosend.com/v3
+  tags:
+  - Subscribers
+  properties:
+  - type: OpenAPI
+    url: openapi/moosend-subscribers-api-openapi.yml
+  - type: Documentation
+    url: https://docs.moosend.com/api-documentation?lang=en_US
+  - type: APIReference
+    url: https://moosendapp.docs.apiary.io/
+  - type: ErrorCatalog
+    url: errors/moosend-problem-types.yml
+  - type: DataModel
+    url: data-model/moosend-data-model.yml
 common:
   - type: Authentication
     url: authentication/moosend-authentication.yml
