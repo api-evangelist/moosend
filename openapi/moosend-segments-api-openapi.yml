@@ -1,0 +1,785 @@
+openapi: 3.2.0
+info:
+  title: Moosend Segments API
+  version: v3
+  description: '#Moosend API
+
+
+    ## Getting started with Moosend API
+
+
+
+
+    Before making use of our API, please read the following carefully to get you started.
+
+
+
+    ## Making API Requests
+
+
+    Both API requests and responses have a format the data is expected to be sent or returned.
+
+
+    Requests consist of a URL that specifies which operation to also call, a query string and usually a request stream as well, which specify parameters for the call. For each request there is a syntax pattern for the URL that must be followed for the system to understand your intension. You may find the appropriate pattern for each call in the “Access URLs” sections in our API Documentation pages.
+
+
+    Parameters in the query string or the request stream should be specified in a format like:
+
+
+    name1=value1&name2=value2&name3=value3&...
+
+
+    As you have probably noticed, each name-value pair is separated by a & character. Note also that special characters in values should be URL-encoded. There are built-in URL-encoding functions in all major programming languages like C# and PHP. Please refer to each language’s documentation for more information.
+
+
+    The request must also contain information about how you would like the response to be formatted. There are currently two available formats for getting a response: **xml** and **json**. You have to specify the format in every API call as an extension in the URL.
+
+
+    So let’s summarize all above with an example request URL and a couple of hypothetical parameters:
+
+
+    Example requesting response in xml format:
+
+
+    `http://api.moosend.com/v3/somepath/testmethod.xml?param1=value1&m2=value2+with+special+chars+like+%40`
+
+
+    Example requesting response in json format:
+
+
+    `http://api.moosend.com/v3/somepath/testmethod.json?param1=value1&m2=value2+with+special+chars+like+%40`
+
+
+    Note also that you must set the correct accept header in your application’s request in order to retrieve the response data in the expected format.
+
+
+    For xml response you must set the accept header to: **application/xhtml+xml,application/xml**
+
+
+    For json response you must set the accept header to: **application/json**
+
+
+    ## Authentication
+
+
+    All API calls require authentication. This is essential for the API to identify which user is making the call so that appropriate results will be returned, as well as for security reasons.
+
+
+    Authentication is achieved through the use of an API key. This is a unique key for each account in our system. You can get your API key from the settings page in your account. Please keep your API key safe to prevent any unauthorized access. Once you obtain your API key, you will have to use it in every API call you make. The API key must always be specified as a parameter in the query string of the requesting URL, as in the example below:
+
+
+    `http://api.moosend.com/v3/campaigns/create.xml?apikey=YOUR_API_KEY`
+
+
+    You may find your API Key or generate a new one in the respective section under the Settings Menu.
+
+
+    ## Request Methods
+
+
+    There are 3 request methods that you will have to use in order to make full use of our API: GET, POST and DELETE. You must set your application to make each API call using the appropriate request method, which is explicitly specified in our API documentation pages for each call. Let us explain how these methods should be used:
+
+
+    **GET:** Used for retrieving data from your account in our system. All request parameters in this case are expected to be found in the request URL, in a format specified explicitly for each API call. You can find detailed information on how to specify parameters for each call in our API documentation pages. You may test a GET request in a web browser, by entering the URL in the address bar. Don''t forget to include your API key parameter in the query string!
+
+
+    **POST:** Used for sending information to our system in order to modify data in your account. In this case request parameters should be specified in the request stream. Only authentication and response format are usually expected to be found in the URL, unless differently specified in the “Access URLs” section of our API Documentation pages. Currently, the API accepts only URL-encoded data in the request stream, which is the same format as the one expected for parameter values in the query string. Note also that the content-type header of the request to be made should be “application/x-www-form-urlencoded”.
+
+
+    **DELETE:** Used for deleting information from your account. No more different from POST regarding its use.
+
+
+    Below is an example of a *POST* request:
+
+
+    Request URL:
+
+
+    `http://api.moosend.com/v3/campaigns/create.xml?apikey=YOUR_API_KEY`
+
+
+    Request Stream:
+
+
+    *(assumes hypothetical parameters: Name = New campaign, Subject = Some cool subject, SenderEmail = info@example.com, WebLocation = http://example.com/home/newsletter, MailingListID = 01234567-89ab-cdef-0123-456789abcdef)*
+
+
+    `Name=New+campaign&Subject=Some+cool+subject&SenderEmail=info%40example.com& WebLocation=http%3a%2f%2fexample.com%2fhome%2fnewsletter&MailingListID=01234567-89ab-cdef-0123-456789abcdef`
+
+
+    ## Changelog
+
+
+    + Added HasExternalDoubleOptIn property in [Adding subscribers](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/adding-subscribers)
+
+    + Added HasExternalDoubleOptIn property in [Adding multiple subscribers](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/adding-multiple-subscribers)
+
+    + Added HasExternalDoubleOptIn property in [Updating a subscriber](https://jsapi.apiary.io/previews/moosendapp/reference/subscribers/add-or-update-subscribers/updating-a-subscriber)'
+  contact:
+    name: Moosend Support
+    url: https://moosend.com/support/
+  x-source: Transcribed from the Moosend API Blueprint published by Moosend at https://moosendapp.docs.apiary.io/api-description-document (FORMAT 1A, HOST https://api.moosend.com/v3).
+servers:
+- url: https://api.moosend.com/v3
+security:
+- apikeyQuery: []
+tags:
+- name: Segments
+paths:
+  /lists/{MailingListID}/segments.{Format}:
+    get:
+      operationId: gettingSegments
+      summary: Getting segments
+      description: Get a list of all segments with their criteria for the given mailing list.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 100
+                    CurrentPage: 1
+                    TotalResults: 1
+                    TotalPageCount: 1
+                    SortExpression: CreatedOn
+                    SortIsAscending: false
+                  Segments:
+                  - ID: 7314
+                    Name: City
+                    MatchType: 1
+                    Criteria:
+                    - ID: 12244
+                      SegmentID: 7314
+                      Field: 2
+                      CustomFieldID: null
+                      Comparer: 0
+                      Value: test
+                      DateFrom: null
+                      DateTo: null
+                      Properties: null
+                      Subscriteria: null
+                    - ID: 12348
+                      SegmentID: 7314
+                      Field: 99
+                      CustomFieldID: e4823107-d02d-48af-8190-d8694a33401e
+                      Comparer: 0
+                      Value: UK
+                      DateFrom: null
+                      DateTo: null
+                      Properties: null
+                      Subscriteria: null
+                    CreatedBy: 211.11.111.11
+                    CreatedOn: /Date(1451490040010+0000)/
+                    UpdatedBy: 211.11.111.11
+                    UpdatedOn: /Date(1451490040010+0000)/
+                    FetchType: 0
+                    FetchValue: 0
+                    Description: Fetch all where "City" is "UK" or "Recipient Name" is "Test"
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/details.{Format}:
+    get:
+      operationId: gettingSegmentDetails
+      summary: Getting segment details
+      description: Gets detailed information on a specific segment and its criteria. However, it does not include the subscribers returned by the segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10198'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  ID: 10198
+                  Name: test
+                  MatchType: 0
+                  Criteria:
+                  - ID: 15778
+                    SegmentID: 10198
+                    Field: 2
+                    CustomFieldID: null
+                    Comparer: 0
+                    Value: Paul
+                    DateFrom: null
+                    DateTo: null
+                    Properties: null
+                    Subscriteria: null
+                  - ID: 15779
+                    SegmentID: 10198
+                    Field: 4
+                    CustomFieldID: null
+                    Comparer: 8
+                    Value: '5'
+                    DateFrom: /Date(1465167600000+0100)/
+                    DateTo: /Date(1465945200000+0100)/
+                    Properties: null
+                    Subscriteria: null
+                  CreatedBy: 212.123.123.112
+                  CreatedOn: /Date(1465806037033+0100)/
+                  UpdatedBy: 212.123.123.112
+                  UpdatedOn: /Date(1465806269980+0100)/
+                  FetchType: 0
+                  FetchValue: 0
+                  Description: Fetch all where "Recipient Name" is "Paul" and "Campaigns Opened" is greater than "5"
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/members.{Format}:
+    get:
+      operationId: gettingSegmentSubscribers
+      summary: Getting segment subscribers
+      description: Gets a list of the subscribers that the specified segment returns according to its criteria. Because the results for this call could be quite big, paging information is required as input.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10198'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful
+                  Error:
+                    description: The response error message. This will be null if successful
+                  Context:
+                    description: 'The response context. Contains all the following information:'
+              example:
+                Code: 0
+                Error: null
+                Context:
+                  Paging:
+                    PageSize: 500
+                    CurrentPage: 1
+                    TotalResults: 2
+                    TotalPageCount: 1
+                    SortExpression: null
+                    SortIsAscending: false
+                  Subscribers:
+                  - ID: 07111755-8ee4-1111-ad2b-1111899c6f
+                    Name: Paul
+                    Email: paul@email.com
+                    CreatedOn: /Date(1461777177393+0100)/
+                    UpdatedOn: /Date(1461777177393+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 2
+                    CustomFields:
+                    - CustomFieldID: 63705cf2-7cbb-4ac1-a246-1a8c1b416026
+                      Name: CheckBox
+                      Value: 'True'
+                    - CustomFieldID: 63705cf2-7cbb-4ac1-a246-1a8c1b416026
+                      Name: Date
+                      Value: 4/12/2016 12:00:00 AM
+                    - CustomFieldID: 9df6dcc4-bef2-47e7-93af-86889b6b6d6a
+                      Name: Age
+                      Value: '25'
+                    - CustomFieldID: 0d2199aa-65fc-448c-b9fe-199e3b72ebc5
+                      Name: Some custom field
+                      Value: Something2
+                    - CustomFieldID: 46721a6b-09aa-46ff-bab1-a0b75dea24cf
+                      Name: Some custom field 2
+                      Value: Text2
+                    RemovedOn: null
+                  - ID: 0bb00735-7ec7-41de-ab04-d622f67340c4
+                    Name: John
+                    Email: john@email.com
+                    CreatedOn: /Date(1461777334373+0100)/
+                    UpdatedOn: /Date(1461783253670+0100)/
+                    UnsubscribedOn: null
+                    UnsubscribedFromID: null
+                    SubscribeType: 1
+                    SubscribeMethod: 0
+                    CustomFields:
+                    - CustomFieldID: 0bb00735-7ec7-41de-ab04-d622f67340c4
+                      Name: Country
+                      Value: UK
+                    - CustomFieldID: 46721a6b-09aa-46ff-bab1-a0b75dea24cf
+                      Name: Status
+                      Value: single
+                    RemovedOn: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/create.{Format}:
+    post:
+      operationId: creatingANewEmptySegment
+      summary: Creating a new empty segment
+      description: Creates a new empty segment (without criteria) for the given mailing list. You may specify the name of the segment and the way the criteria will match together. Blueprint also documents this operation as "Creating a new segment".
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the segment. ***(Required)***
+                MatchType:
+                  type: string
+                  description: Specifies how the segment's criteria will match together. This must be one of the following values. ***(Optional)*** <br/> If not specified, `All` will be assumed.
+                FetchType:
+                  type: string
+                  description: Specifies how many of the criteria matching subscribers will be contained in the created segment.***(Optional)*** <br/> If not specified, `All` will be assumed.
+                FetchValue:
+                  type: string
+                  description: Specifies the maximum number for `FetchType:Top` or percentage for `FetchType:TopPercent`of members to be contained in the created segment.  If not specified, `0` will be assumed.
+            example:
+              Name: New Customers
+              MatchType: All
+              FetchType: Top
+              FetchValue: '200'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message. This will be null if successful.
+                  Context:
+                    description: Contains the id of the new segment.
+              example:
+                Code: 0
+                Error: null
+                Context: 10199
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/update.{Format}:
+    post:
+      operationId: updatingASegment
+      summary: Updating a segment
+      description: Updates the properties and criteria of an existing segment. You may update the name and match type of the segment. If criteria are included these will also be updated. You may update only the criteria. In that case, the existing name and settings will be retained.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Name:
+                  type: string
+                  description: The name of the segment. ***(Optional)*** <br/> If not specified, the existing name will be retained.
+                MatchType:
+                  type: string
+                  description: Specifies how the segment's criteria will match together. This must be one of the following values. ***(Optional)*** <br/> If not specified, existing settings will be retained.
+                FetchType:
+                  type: string
+                  description: Specifies how many of the criteria matching subscribers will be contained in the created segment. ***(Optional)*** <br/> If not specified, existing settings will be retained.
+                FetchValue:
+                  type: string
+                  description: Specifies the maximum number for `FetchType:Top` or percentage for `FetchType:TopPercent`of members to be contained in the created segment.  If not specified, `0` will be assumed.
+                Criteria:
+                  type: string
+                  description: An array of the criteria to filter the mailing list by. ***(Optional)*** <br/> If not specified, existing criteria will be retained.
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Name: Customer Tracking and Opener
+              MatchType: Any
+              FetchType: All
+              Criteria:
+              - Field: AddedAnythingToCart
+                Comparer: IsTrue
+                Times: 2
+                ProductCode: '123'
+                LastXMinutes: 4320
+                WebsiteId: 12345678-1234-abdc-efgh-1231bc456efg789hij
+              - Field: OpenedAnyCampaign
+                Comparer: IsTrue
+                DateFrom: '2019-09-01'
+                DateTo: '2020-12-01'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response message. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/criteria/add.{Format}:
+    post:
+      operationId: addingCriteriaToSegments
+      summary: Adding criteria to segments
+      description: Adds a new criterion (a rule) to the specified segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Field: DateAdded
+              DateFunction: Year
+              Comparer: Is
+              Value: '2020'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: Contains the new criteriaID.
+              example:
+                Code: 0
+                Error: null
+                Context: 15783
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/criteria/{CriteriaID}/update.{Format}:
+    post:
+      operationId: updatingSegmentCriteria
+      summary: Updating segment criteria
+      description: Updates an existing criterion in the specified segment.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: CriteriaID
+        in: path
+        required: true
+        schema:
+          type: number
+        example: '15783'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                Field:
+                  type: string
+                  description: The field of the criterion to filter the mailing list by. This must be one of the following values. ***(Required)***
+                Comparer:
+                  type: string
+                  description: An operator that defines the way to compare a criterion field with its value. This must be one of the following values. ***(Optional)*** <br/> If not specified, `Is` will be assumed.
+                Value:
+                  type: string
+                  description: A search term to filter the specified field by. ***(Optional)***
+                Date Functions:
+                  type: string
+                  description: Can be used with fields of DateTime data type.
+            example:
+              Field: LinkURL
+              Comparer: is
+              Value: https://www.moosend.com/
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: Contains the updated criteriaID.
+              example:
+                Code: 0
+                Error: null
+                Context: 15783
+      security:
+      - apikeyQuery: []
+  /lists/{MailingListID}/segments/{SegmentID}/delete.{Format}:
+    delete:
+      operationId: deletingASegment
+      summary: Deleting A Segment
+      description: Deletes a segment along with its criteria from the mailing list. The subscribers of the mailing list that the segment returned are not deleted or affected in any way.
+      tags:
+      - Segments
+      parameters:
+      - name: MailingListID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: a589366a-1a34-4965-ac50-f1299fe5979e
+      - name: SegmentID
+        in: path
+        required: true
+        schema:
+          type: string
+        example: '10199'
+      - name: Format
+        in: path
+        required: true
+        schema:
+          type: string
+        example: json
+      - name: apikey
+        in: query
+        required: true
+        schema:
+          type: string
+        description: Account API key. Passed as a query-string parameter on every call.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Code:
+                    description: The response code for this call. This will be 0 if successful.
+                  Error:
+                    description: The response error for this call. This will be null if successful.
+                  Context:
+                    description: The response context for this call. This will be null if successful.
+              example:
+                Code: 0
+                Error: null
+                Context: null
+      security:
+      - apikeyQuery: []
+components:
+  securitySchemes:
+    apikeyQuery:
+      type: apiKey
+      in: query
+      name: apikey
+      description: Moosend account API key, supplied as the `apikey` query-string parameter on every request. Generated in the account Settings menu.
