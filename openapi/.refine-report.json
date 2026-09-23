@@ -1,0 +1,26 @@
+{
+  "provider": "moosend",
+  "sources": [
+    "_original/moosend-openapi.yml"
+  ],
+  "outputs": [
+    "moosend-campaigns-api-openapi.yml",
+    "moosend-mailing-lists-api-openapi.yml",
+    "moosend-segments-api-openapi.yml",
+    "moosend-subscribers-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "moosend-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "moosend-campaigns-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "moosend-mailing-lists-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "moosend-segments-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "moosend-subscribers-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
