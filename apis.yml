@@ -126,6 +126,9 @@ apis:
   - type: DataModel
     url: data-model/moosend-data-model.yml
 common:
+  - type: CapabilityMap
+    url: capabilities/moosend-capability-edges.yml
+    name: Moosend Business Capability Map
   - type: Authentication
     url: authentication/moosend-authentication.yml
   - type: TrustCenter
