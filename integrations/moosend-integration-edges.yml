@@ -42,35 +42,6 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: WordPress plugin
-- partner_name: Meltano
-  partner: meltano
-  partner_match: aggregator
-  type: marketplace
-  marketplace: meltano-hub
-  channel: elt-connector
-  relationship: ipaas-bridge
-  direction: third-party
-  evidence: https://hub.meltano.com/extractors/tap-moosend--hotgluexyz
-  category: null
-  contract_reference:
-    register: Meltano Hub (github.com/meltano/hub _data/meltano extractors + loaders)
-    spec_file: null
-    role: elt-connector:meltano-hub
-    registered_name: Moosend
-    matched_domain: moosend.com
-    matched_by: domain
-    detected_by: sweep-data-integration.py
-    detected: '2026-10-18'
-    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
-    plugins:
-    - tap-moosend--hotgluexyz
-    maintenance_status:
-    - active
-    quality:
-    - gold
-    builder: 'community (Meltano Hub variant maintainers: hotgluexyz)'
-  detected_by: sweep-data-integration.py
-  first_seen: '2026-10-18'
 - partner_name: Go module proxy
   partner: null
   partner_match: null
@@ -139,6 +110,35 @@ edges:
     detected_by: sweep-official-sdks.py
     detected: '2026-10-18'
   detected_by: sweep-official-sdks.py
+  first_seen: '2026-10-18'
+- partner_name: Meltano
+  partner: meltano
+  partner_match: aggregator
+  type: marketplace
+  marketplace: meltano-hub
+  channel: elt-connector
+  relationship: ipaas-bridge
+  direction: third-party
+  evidence: https://hub.meltano.com/extractors/tap-moosend--hotgluexyz
+  category: null
+  contract_reference:
+    register: Meltano Hub (github.com/meltano/hub _data/meltano extractors + loaders)
+    spec_file: null
+    role: elt-connector:meltano-hub
+    registered_name: Moosend
+    matched_domain: moosend.com
+    matched_by: domain
+    detected_by: sweep-data-integration.py
+    detected: '2026-10-18'
+    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
+    plugins:
+    - tap-moosend--hotgluexyz
+    maintenance_status:
+    - active
+    quality:
+    - gold
+    builder: 'community (Meltano Hub variant maintainers: hotgluexyz)'
+  detected_by: sweep-data-integration.py
   first_seen: '2026-10-18'
 method: searched
 checked:
