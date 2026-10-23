@@ -41,35 +41,6 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
-- slug: moosend-meltano
-  label: Meltano
-  partner: meltano
-  partner_name: Meltano
-  type: marketplace
-  marketplace: meltano-hub
-  channel: elt-connector
-  evidence: https://hub.meltano.com/extractors/tap-moosend--hotgluexyz
-  source: edge
-  relationship: ipaas-bridge
-  contract_reference:
-    register: Meltano Hub (github.com/meltano/hub _data/meltano extractors + loaders)
-    spec_file: null
-    role: elt-connector:meltano-hub
-    registered_name: Moosend
-    matched_domain: moosend.com
-    matched_by: domain
-    detected_by: sweep-data-integration.py
-    detected: '2026-10-18'
-    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
-    plugins:
-    - tap-moosend--hotgluexyz
-    maintenance_status:
-    - active
-    quality:
-    - gold
-    builder: 'community (Meltano Hub variant maintainers: hotgluexyz)'
-  status: not-a-workflow
-  arazzo: null
 - slug: moosend-go-module-proxy
   label: Go module proxy
   partner_name: Go module proxy
@@ -138,5 +109,74 @@
       24 months'
     detected_by: sweep-official-sdks.py
     detected: '2026-10-18'
+  status: not-a-workflow
+  arazzo: null
+- slug: moosend-meltano
+  label: Meltano
+  partner: meltano
+  partner_name: Meltano
+  type: marketplace
+  marketplace: meltano-hub
+  channel: elt-connector
+  evidence: https://hub.meltano.com/extractors/tap-moosend--hotgluexyz
+  source: edge
+  relationship: ipaas-bridge
+  contract_reference:
+    register: Meltano Hub (github.com/meltano/hub _data/meltano extractors + loaders)
+    spec_file: null
+    role: elt-connector:meltano-hub
+    registered_name: Moosend
+    matched_domain: moosend.com
+    matched_by: domain
+    detected_by: sweep-data-integration.py
+    detected: '2026-10-18'
+    signal_note: one edge per (provider, platform); connectors, streams, packages and usage are context, never read
+    plugins:
+    - tap-moosend--hotgluexyz
+    maintenance_status:
+    - active
+    quality:
+    - gold
+    builder: 'community (Meltano Hub variant maintainers: hotgluexyz)'
+  status: not-a-workflow
+  arazzo: null
+- slug: moosend-packagist
+  label: Packagist
+  partner: packagist
+  partner_name: Packagist
+  category: official SDK (PHP)
+  type: register
+  channel: package-registry
+  evidence: https://packagist.org/packages/moosend/module-mootracker
+  source: edge
+  relationship: distribution-channel
+  contract_reference:
+    register: Packagist (public registry JSON)
+    spec_file: null
+    language: PHP
+    packages:
+    - name: moosend/module-mootracker
+      version: 1.0.13
+      released: '2023-07-04'
+      released_field: time
+      lapsed: true
+      page: https://packagist.org/packages/moosend/module-mootracker
+      repo_leg: github-org:moosend
+      publisher_leg: email:moosend.com
+      matched_by: domain
+    - name: moosend/phpwrapper
+      version: '200069478'
+      released: '2020-02-25'
+      released_field: time
+      lapsed: true
+      page: https://packagist.org/packages/moosend/phpwrapper
+      repo_leg: github-org:moosend
+      publisher_leg: org:moosend
+      matched_by: github-org
+    current: false
+    signal_note: 'an official package on the registry: distribution, not an integration; lapsed = no release in
+      24 months'
+    detected_by: sweep-php-dart-elixir-package-registries.py
+    detected: '2026-10-22'
   status: not-a-workflow
   arazzo: null
