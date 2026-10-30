@@ -1,4 +1,4 @@
-# Moosend (moosend)
+# Moosend
 
 <!-- API-EVANGELIST-PROVENANCE:BEGIN -->
 > ### About this repository
@@ -66,66 +66,143 @@
 
 Moosend is an email marketing and automation platform with a REST API for managing mailing lists, campaigns, subscribers, automations, and tracking email performance metrics. The API uses HTTPS with API key authentication and provides programmatic access to email lists, subscriber management, campaign creation and scheduling, audience segmentation, transactional emails, and real-time reporting.
 
-APIs.json: https://raw.githubusercontent.com/api-evangelist/moosend/refs/heads/main/apis.yml
+**Areas:** Email Marketing · Marketing Automation · Campaigns · Mailing Lists · Subscribers · Transactional Email · SMTP · Segmentation · Analytics · Email · Newsletters · Landing Pages
 
-Naftiko: https://github.com/naftiko/fleet?utm_source=api-evangelist&utm_medium=readme&utm_campaign=moosend-api-evangelist&utm_content=repo
+## Moosend on APIs.io
 
-## Tags
+Everything profiled for Moosend is published on APIs.io rather than in this repository. Start at the provider page — **[apis.io/providers/moosend/](https://apis.io/providers/moosend/)** — or go straight to one of the APIs or properties below.
 
-- Email Marketing
-- Marketing Automation
-- Campaigns
-- Mailing Lists
-- Subscribers
-- Transactional Email
-- SMTP
-- Segmentation
-- Analytics
+### APIs (4)
 
-## APIs
+- [Moosend Campaigns API](https://apis.io/apis/moosend/moosend-campaigns-api/) — The Campaigns API from Moosend — 19 operation(s) for campaigns.
+- [Moosend Mailing Lists API](https://apis.io/apis/moosend/moosend-mailing-lists-api/) — The Mailing Lists API from Moosend — 9 operation(s) for mailing lists.
+- [Moosend Segments API](https://apis.io/apis/moosend/moosend-segments-api/) — The Segments API from Moosend — 8 operation(s) for segments.
+- [Moosend Subscribers API](https://apis.io/apis/moosend/moosend-subscribers-api/) — The Subscribers API from Moosend — 11 operation(s) for subscribers.
 
-**Moosend API**
-The Moosend REST API (v3) enables programmatic access to email marketing and automation capabilities including managing email lists, subscribers, campaigns, segments, and transactional emails. Authentication is via API key passed as a query string parameter.
+### Published properties
 
-- Base URL: https://api.moosend.com/v3
-- Documentation: https://docs.moosend.com/developers/api-documentation/en/index-en.html
-- API Reference (Apiary): https://moosendapp.docs.apiary.io/
-- GitHub Org (SDKs): https://github.com/moosend
+Each property below is a page on APIs.io carrying the machine-readable artifact and what it says.
 
-API resources include:
+#### MCP servers (1)
 
-- Email Lists — create, retrieve, update, delete lists and custom data fields
-- Subscribers — add up to 1,000 subscribers, manage custom data, retrieve by ID or email, unsubscribe
-- Campaigns — create, clone, test, schedule, and send campaigns; retrieve performance metrics
-- Segments — create, update, delete, and retrieve audience segments
-- Transactional Campaigns — send real-time automated transactional emails
+Model Context Protocol servers that expose the API to agents.
 
-## Plans / Rate Limits / FinOps
+- [moosend](https://apis.io/servers/moosend/moosend/)
 
-- Plans and Pricing: [plans/moosend-plans-pricing.yml](plans/moosend-plans-pricing.yml)
-- Rate Limits: [rate-limits/moosend-rate-limits.yml](rate-limits/moosend-rate-limits.yml)
-- FinOps: [finops/moosend-finops.yml](finops/moosend-finops.yml)
+#### JSON-LD (1)
 
-Moosend pricing is contact-based. The Pro plan starts at $9/month for 500 contacts and scales up to $5,840/month for 1,000,000 contacts. Annual billing saves 20%, biannual billing saves 15%. Email credits (pay-as-you-go) are available and never expire. Rate limits are enforced per API key per endpoint, ranging from 2 requests per 60 seconds (campaign stats) to 500 requests for transactional campaign management. HTTP 429 is returned when limits are exceeded.
+Linked-data contexts for the provider's vocabulary.
 
-## Timestamps
+- [Moosend Context](https://apis.io/jsonld/moosend/moosend-context/)
 
-- Created: 2026-06-13
-- Modified: 2026-06-13
+#### Collections (1)
 
-## Common
+Postman and Open Collection request collections.
 
-| Type | URL |
-|------|-----|
-| Website | https://moosend.com/ |
-| Documentation | https://docs.moosend.com/developers/api-documentation/en/index-en.html |
-| GitHub Org | https://github.com/moosend |
-| LinkedIn | https://www.linkedin.com/company/moosend |
-| Blog | https://moosend.com/blog/ |
-| Pricing | https://moosend.com/pricing/ |
-| Status Page | https://status.moosend.com/ |
-| X | https://x.com/moosend |
+- [Moosend API](https://apis.io/collections/moosend/open-moosend/)
 
-## Maintainers
+#### Overlays (1)
 
-- **Kin Lane** — kin@apievangelist.com
+OpenAPI overlays, including conversational phrasing for each operation.
+
+- [Moosend Openapi Overlay](https://apis.io/overlays/moosend/moosend-openapi-overlay/)
+
+#### Security (4)
+
+Authentication, trust centre, and vulnerability disclosure.
+
+- [Moosend Authentication](https://apis.io/security/moosend/moosend-authentication/)
+- [Moosend Domain Security](https://apis.io/security/moosend/moosend-domain-security/)
+- [Moosend Trust Center](https://apis.io/security/moosend/moosend-trust-center/)
+- [Moosend Vulnerability Disclosure](https://apis.io/security/moosend/moosend-vulnerability-disclosure/)
+
+#### Plans and pricing (1)
+
+Published plans, tiers and prices.
+
+- [Moosend Plans Pricing](https://apis.io/plans/moosend/moosend-plans-pricing/)
+
+#### Rate limits (1)
+
+Published request limits.
+
+- [Moosend Rate Limits](https://apis.io/rate-limits/moosend/moosend-rate-limits/)
+
+#### FinOps (1)
+
+What the API costs to run, by operation.
+
+- [Moosend Finops](https://apis.io/finops/moosend/moosend-finops/)
+
+## Where to find this API
+
+Links to the company's own pages. This repository publishes no copy of their specifications — the canonical document is theirs and lives at the URLs below.
+
+- [Website](https://moosend.com/)
+- [Documentation](https://docs.moosend.com/api-documentation?lang=en_US)
+- [API reference](https://moosendapp.docs.apiary.io/)
+- [Pricing](https://moosend.com/pricing/)
+- [Sign up](https://identity.moosend.com/register/)
+- [Support](https://moosend.com/contact-us/support/)
+- [Blog](https://moosend.com/blog/)
+- [Security](https://moosend.com/privacy-policy/disclosure/)
+- [Compliance](https://moosend.com/trust/compliance/)
+- [Terms of service](https://moosend.com/terms/)
+- [Privacy policy](https://moosend.com/privacy-policy/)
+- [GitHub](https://github.com/moosend)
+- [Status](https://moosend.statuspage.io)
+
+## API Evangelist rating
+
+**Kin Score 60.5** — strong · rubric 0.25.0 · scored 2026-10-23
+
+| Facet | Score |
+|---|---|
+| Discoverability | 73.2 |
+| Contract quality | 55.0 |
+| Contract governance | 4.5 |
+| Operational transparency | 60.5 |
+| Developer ergonomics | 50.6 |
+| Access clarity | 92.1 |
+
+**Agent readiness 34.3** — agent-ready
+
+| Agent-readiness dimension | Result |
+|---|---|
+| Spec Presence | yes |
+| Agentic Access | — |
+| Reversibility Documented | — |
+| MCP Server | — |
+| Auth Clarity | served (partial credit) |
+| Idempotency | — |
+| Error Semantics | derived (partial credit) |
+| OpenAPI Examples | verified |
+| Rate Limit Signal | documented (partial credit) |
+| Event Surface Described | — |
+| Agent Skills | derived (partial credit) |
+| Well Known Catalog | — |
+| Consent Identity | — |
+| Agent Card | — |
+| Dry Run Mode | — |
+| Delegated Identity | — |
+| Protected Resource Metadata | — |
+| Dynamic Client Registration | yes |
+| Agentic Commerce | — |
+| Pagination Ratio | na |
+| Operation Distinctiveness | distinct |
+
+**Regulatory alignment 34.2** — Telecommunications
+
+The rubric is published at [github.com/api-evangelist/kin-score](https://github.com/api-evangelist/kin-score). The per-check breakdown behind these numbers — which checks were earned, partial or missed — along with score history and how this provider compares to its peers, is available at [apis.io/providers/moosend/](https://apis.io/providers/moosend/).
+
+## How this profile is made
+
+API Evangelist profiles a company's public API surface the way a developer would find it: the website, developer portal and documentation, the specifications it publishes, its public repositories, and its pricing, status and changelog pages. From that it derives the properties above — contracts split per API, workflows, schemas, collections, governance rules, plans and rate limits — and scores them against the published [Kin Score rubric](https://github.com/api-evangelist/kin-score).
+
+The artifacts are published on [APIs.io](https://apis.io), not in this repository. This repository is the public record for Moosend: the place to say something is wrong, missing or out of date, and to ask for a re-score or a removal.
+
+## Open an issue
+
+- **Something about this listing** — a wrong description, a missing API, a stale artifact or a question about the rating: [open an issue on this repository](https://github.com/api-evangelist/moosend/issues/new).
+- **A new API, or one that is not in the catalog yet** — [submit it on APIs.io](https://apis.io/add/).
+- **Anything else** — [the APIs.io inbox](https://github.com/api-search/inbox/issues/new) or [info@apievangelist.com](mailto:info@apievangelist.com).
